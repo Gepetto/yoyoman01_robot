@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package>
+  <name>yoyoman01_gazebo</name>
+  <version>0.0.0</version>
+  <description>The yoyoman01_gazebo package</description>
+
+  <maintainer email="fcaminade@laas.fr">Florenc Caminade</maintainer>
+  <maintainer email="ostasse@laas.fr">Olivier Stasse</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://github.com/Gepetto/yoyoman01_robot</url> 
+
+
+  <author email="fcaminade@laas.fr">Florent Caminade</author>
+  <author email="fcaminade@laas.fr">Olivier Stasse</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>gazebo_plugins</run_depend>
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>gazebo_ros_control</run_depend>
+  <run_depend>xacro</run_depend>
+  <run_depend>yoyoman01_control</run_depend>
+  <run_depend>yoyoman01_description</run_depend>
+
+
+  <export>
+  </export>
+</package>
