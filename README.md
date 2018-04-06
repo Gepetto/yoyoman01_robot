@@ -1,6 +1,10 @@
 # yoyoman01_robot
 Repository collecting all the ROS packages for the Yoyoman01 passive walker.
 
+Gazebo simulation
+=================
+roslaunch yoyoman1_gazebo yoyoman01_world.launch
+
 Rviz visualization
 ==================
 
