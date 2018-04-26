@@ -16,18 +16,19 @@
   <joint name="fixed" type="fixed">
     <parent link="world"/>
     <child link="base_link"/>
-  </joint>
+</joint>
   
   <link name="base_link">
     <inertial>
-      <mass value="0.663"/>
-      <inertia ixx="0.049" ixy="-3.058e-7" ixz="-0.00004029" iyy="0.043" iyz="1.539e-5" izz="0.006"/>
-      <origin rpy="0 0 0" xyz="0 0 0.388"/>
+      <mass value="1.635"/>
+      <inertia ixx="86e-03" ixy="-39.84e-6" ixz="3.991e-4" iyy="83e-3" iyz="-38.29e-6" izz="4e-3"/>
+      <origin rpy="0 0 0" xyz="0 0 0.17346"/>
     </inertial>
     <visual>
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/BUSTE.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+    <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
     <material name="blue"/>
     </visual>
     <collision>
@@ -36,49 +37,25 @@
       </geometry>
     </collision>
   </link>
- <joint name="Head" type="revolute">
-    <parent link="NeckLink"/>
-    <child link="HeadLink"/>
-    <origin rpy="0 0 0" xyz="0 0 0.056"/>
-    <axis xyz="0 1.0 0"/>
-    <limit effort="0.5" lower="0" upper="0.5" velocity="1"/>
-  </joint>
-  <link name="HeadLink">
-    <inertial>
-      <mass value="0.254"/>
-      <inertia ixx="0.003" ixy="0.00" ixz="-5.71E-008" iyy="0.001" iyz="0.00" izz="0.001"/>
-      <origin rpy="0 0 0" xyz="0 0 0.1"/>
-    </inertial>
-    <visual>
-      <geometry>
-        <mesh filename="package://yoyoman01_description/meshes/TETE.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    <origin rpy="0 0 0 " xyz="0 0 0"/>
-    <material name="blue"/>
-    </visual>
-    <collision>
-      <geometry>
-        <mesh filename="package://yoyoman01_description/meshes/TETE.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </collision>
-  </link>
+  
   <joint name="Neck" type="revolute">
     <parent link="base_link"/>
     <child link="NeckLink"/>
-    <origin rpy="0 0 0" xyz="0 0 0.669"/>
-    <axis xyz="0 1.0 0"/>
+    <origin rpy="0 0 0" xyz="0 0 0.675"/>
+    <axis xyz="0 1 0"/>
     <limit effort="0.5" lower="0" upper="0.5" velocity="1"/>
   </joint>
   <link name="NeckLink">
     <inertial>
       <mass value="0.061"/>
-      <inertia ixx="2.791e-5" ixy="6.564e-10" ixz="-0.000000001" iyy="2.334e-5" iyz="8.312e-7" izz="1.155e-5"/>
+      <inertia ixx="2.95e-5" ixy="-7.67e-9" ixz="-3.61e-9" iyy="2.53e-5" iyz="-3.05e-6" izz="1.09e-5"/>
       <origin rpy="0 0 0" xyz="0 0 0.03"/>
     </inertial>
     <visual>
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/COU.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+    <origin rpy="0 0 1.57075" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
@@ -86,24 +63,54 @@
       </geometry>
     </collision>
   </link>
+  
+ <joint name="Head" type="revolute">
+    <parent link="NeckLink"/>
+    <child link="HeadLink"/>
+    <origin rpy="0 0 0" xyz="0 0 0.064502"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="0.5" lower="0" upper="0.5" velocity="1"/>
+  </joint>
+  <link name="HeadLink">
+    <inertial>
+      <mass value="0.340"/>
+      <inertia ixx="2e-3" ixy="-129.7e-9" ixz="5.391e-5" iyy="3e-3" iyz="-267.9e-9" izz="1e-3"/>
+      <origin rpy="0 0 0" xyz="0 0 0.143385"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/TETE.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 1.57075 " xyz="0 0 0"/>
+    <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/TETE.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+  
+
+  
 <joint name="Rarm" type="revolute">
     <parent link="base_link"/>
     <child link="RArmLink"/>
-    <origin rpy="0 0 0" xyz="0 -0.155 0.580 "/>
-    <axis xyz="0 1.0 0"/>
+    <origin rpy="0 0 0" xyz="0 -0.155 0.589901 "/>
+    <axis xyz="0 1 0"/>
     <limit effort="5" lower="0" upper="5" velocity="1"/>
   </joint>
 <link name="RArmLink">
     <inertial>
-      <mass value="0.237"/>
-      <inertia ixx="0.002" ixy="2.19e-20" ixz="7.418e-20" iyy="0.002" iyz="1.207e-6" izz="6.001e-5"/>
-      <origin rpy="0 0 0 " xyz="0 0 -0.322"/>
+      <mass value="0.172"/>
+      <inertia ixx="3e-3" ixy="-2.011e-20" ixz="-3.61e-9" iyy="3e-3" iyz="3.05e-6" izz="2.475e-5"/>
+      <origin rpy="0 0 0 " xyz="0 0 -0.10032"/>
     </inertial>
     <visual>
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/BRAS.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-    <origin rpy="0 0 3.14" xyz="0 0 0"/>
+    <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
@@ -111,24 +118,25 @@
       </geometry>
     </collision>
   </link>
+  
 <joint name="Larm" type="revolute">
     <parent link="base_link"/>
     <child link="LArmLink"/>
-    <origin rpy="0 0 0" xyz="0 0.155 0.580 "/>
-    <axis xyz="0 1.0 0"/>
+    <origin rpy="0 0 0" xyz="0 0.155 0.589901 "/>
+    <axis xyz="0 1 0"/>
     <limit effort="2.57" lower="-0.349066" upper="0.279253" velocity="1.9"/>
   </joint>
 <link name="LArmLink">
     <inertial>
-      <mass value="0.237"/>
-      <inertia ixx="0.002" ixy="-2.19e-20" ixz="7.418e-20" iyy="0.002" iyz="-1.207e-6" izz="6.001e-5"/>
-      <origin rpy="0 0 0" xyz="0 0 -0.322"/>
+      <mass value="0.172"/>
+      <inertia ixx="3e-3" ixy="2.011e-20" ixz="-3.61e-9" iyy="3e-3" iyz="-3.05e-6" izz="2.475e-5"/>
+      <origin rpy="0 0 0 " xyz="0 0 -0.10032"/>
     </inertial>
     <visual>
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/BRAS.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 1.57075" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
@@ -136,6 +144,7 @@
       </geometry>
     </collision>
   </link>
+  
   <joint name="RHip" type="revolute">
     <parent link="base_link"/>
     <child link="RHipLink"/>
@@ -145,14 +154,15 @@
   </joint>
   <link name="RHipLink">
     <inertial>
-      <mass value="0.92"/>
+      <mass value="0.816"/>
       <inertia ixx="0.001" ixy="1.921e-4" ixz="-0.0001443" iyy="0.002" iyz="1.291e-4" izz="0.002"/>
-      <origin rpy="0 0 0" xyz="0.038 -0.034 0.007"/>
+      <origin rpy="0 0 0" xyz="0.0506 -0.0137 0.0101"/>
     </inertial>
     <visual>
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/HANCHE_D.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+    <origin rpy="0 3.14 1.57075" xyz="0 0 0"/> 
     </visual>
     <collision>
       <geometry>
@@ -160,6 +170,7 @@
       </geometry>
     </collision>
   </link>
+  
   <joint name="LHip" type="revolute">
     <parent link="base_link"/>
     <child link="LHipLink"/>
@@ -169,14 +180,15 @@
   </joint>
   <link name="LHipLink">
     <inertial>
-      <mass value="0.92"/>
+      <mass value="0.816"/>
       <inertia ixx="0.001" ixy="-1.921e-4" ixz="-0.0001443" iyy="0.002" iyz="-1.291e-4" izz="0.002"/>
-      <origin rpy="0 0 0" xyz="0.038 0.034 0.007"/>
+      <origin rpy="0 0 0" xyz="0.0506 0.0137 0.0101"/>
     </inertial>
     <visual>
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/HANCHE_G.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+    <origin rpy="0 0 1.57075" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
@@ -184,43 +196,19 @@
       </geometry>
     </collision>
   </link>
+  
   <joint name="RKnee" type="fixed">
     <parent link="RHipLink"/>
     <child link="RKneeLink"/>
-    <origin rpy="0 0 0" xyz="0.015 -0.068 -0.04"/>
-    <axis xyz="0 0 1"/>
+    <origin rpy="0 0 0" xyz="-0.021 -0.068 -0.01"/>
+    <axis xyz="0 0 0"/>
     <limit effort="50" lower="0" upper="0.04" velocity="1"/>
   </joint>
   <link name="RKneeLink">
     <inertial>
-      <mass value="0.527"/>
-      <inertia ixx="0.052" ixy="1.464e-5" ixz="-0.00006891" iyy="0.052" iyz="0.002" izz="0.001"/>
-      <origin rpy="0 0 0" xyz="0.002 0.017 -0.560"/>
-    </inertial>
-    <visual>
-      <geometry>
-        <mesh filename="package://yoyoman01_description/meshes/JAMBE_D.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    <material name="blue"/>
-    </visual>
-    <collision>
-      <geometry>
-        <mesh filename="package://yoyoman01_description/meshes/JAMBE_D.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </collision>
-  </link> 
-  <joint name="LKnee" type="fixed">
-    <parent link="LHipLink"/>
-    <child link="LKneeLink"/>
-    <origin rpy="0 0 0" xyz="0.015 0.068 -0.04"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="50" lower="0" upper="0.04" velocity="1"/>
-  </joint>
-  <link name="LKneeLink">
-    <inertial>
-      <mass value="0.527"/>
-      <inertia ixx="0.052" ixy="-1.464e-5" ixz="-0.00006891" iyy="0.052" iyz="-0.002" izz="0.001"/>
-      <origin rpy="0 0 0" xyz="0.002 -0.017 -0.560"/>
+      <mass value="0.839"/>
+      <inertia ixx="80e-3" ixy="17.42e-6" ixz="-154.3e-6" iyy="80e-3" iyz="-3e-3" izz="2e-3"/>
+      <origin rpy="0 0 0" xyz="0.01817 -0.01317 -0.557"/>
     </inertial>
     <visual>
       <geometry>
@@ -234,7 +222,39 @@
         <mesh filename="package://yoyoman01_description/meshes/JAMBE_G.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
+  </link> 
+  
+  <joint name="LKnee" type="fixed">
+    <parent link="LHipLink"/>
+    <child link="LKneeLink"/>
+    <origin rpy="0 0 0" xyz="-0.021 0.068 -0.01"/>
+    <axis xyz="0 0 0"/>
+    <limit effort="50" lower="0" upper="0.04" velocity="1"/>
+  </joint>
+  <link name="LKneeLink">
+    <inertial>
+      <mass value="0.839"/>
+      <inertia ixx="80e-3" ixy="-17.42e-6" ixz="-154.3e-6" iyy="80e-3" iyz="3e-3" izz="2e-3"/>
+      <origin rpy="0 0 0" xyz="0.01817 0.01317 -0.557"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/JAMBE_D.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 3.14" xyz="0 0 0"/>
+    <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/JAMBE_D.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
   </link>
+
+<!--
+**********Transmissions**********
+-->
+
 
   <transmission name="tranHead">
     <type>transmission_interface/SimpleTransmission</type>
