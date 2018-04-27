@@ -22,15 +22,18 @@
     <inertial>
       <mass value="1.635"/>
       <inertia ixx="86e-03" ixy="-39.84e-6" ixz="3.991e-4" iyy="83e-3" iyz="-38.29e-6" izz="4e-3"/>
-      <origin rpy="0 0 0" xyz="0 0 0.17346"/>
+      <origin rpy="0 0 -1.57075" xyz="0 0 0.17346"/>
     </inertial>
+    
     <visual>
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/BUSTE.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-    <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
     <material name="blue"/>
     </visual>
+<!--
+    <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
+-->
     <collision>
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/BUSTE.stl" scale="0.001 0.001 0.001"/>
