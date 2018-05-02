@@ -267,20 +267,20 @@
   <joint name="RFoot" type="fixed">
     <parent link="RKneeLink"/>
     <child link="RFootLink"/>
-    <origin rpy="0 0 0" xyz="-0.0187 0 -0.7775"/>
+    <origin rpy="0 0 0" xyz="0.0187 0 -0.7775"/>
     <axis xyz="0 0 0"/>
   </joint>
     <link name="RFootLink">
-  </link>link>
+  </link>
   
   <joint name="LFoot" type="fixed">
     <parent link="LKneeLink"/>
     <child link="LFootLink"/>
-    <origin rpy="0 0 0" xyz="-0.0187 0 -0.7775"/>
+    <origin rpy="0 0 0" xyz="0.0187 0 -0.7775"/>
     <axis xyz="0 0 0"/>
   </joint>
     <link name="LFootLink">
-  </link>link>
+  </link>
 
 
 <!--
