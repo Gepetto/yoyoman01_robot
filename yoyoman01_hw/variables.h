@@ -44,32 +44,34 @@
 #define PIN_DATA_CTRL_AX PG2
 #define PIN_DATA_CTRL_XM PG3
 //------------------Definition des Moteurs--------------------
-#define OD_RIGHT 0
-#define OD_LEFT 1
-#define AX_RIGHT 1
-#define AX_LEFT 2
-#define XM_RIGHT 1
-#define XM_LEFT 2
+#define OD_0 0  //RIGHT
+#define OD_1 1  //LEFT
+#define AX_1 1  //RIGHT
+#define AX_2 2  //LEFT
+#define XM_1 1  //RIGHT
+#define XM_2 2  //LEFT
 #define ALL 254 // Broadcast ID
 //------------------Definition des Variables--------------------
 
 //IMU
-struct rate_scaled{//rad/s
-double rXrate_scaled;
-double rYrate_scaled;
-double rZrate_scaled;
-}ratescaled;
-struct acc_scaled{//g
-double rXacc_scaled;
-double rYacc_scaled;
-double rZacc_scaled;
-}accscaled;
-struct mag_scaled{//gauss
-double rXmag_scaled;
-double rYmag_scaled;
-double rZmag_scaled;
-}magscaled;
-
+struct rate_scaled
+{ //rad/s
+  double rXrate_scaled;
+  double rYrate_scaled;
+  double rZrate_scaled;
+} ratescaled;
+struct acc_scaled
+{ //g
+  double rXacc_scaled;
+  double rYacc_scaled;
+  double rZacc_scaled;
+} accscaled;
+struct mag_scaled
+{ //gauss
+  double rXmag_scaled;
+  double rYmag_scaled;
+  double rZmag_scaled;
+} magscaled;
 
 uint8_t DIAGNOSTIC_STATUS;
 
@@ -78,14 +80,14 @@ uint8_t DIAGNOSTIC_STATUS;
 struct TrameWrite
 { // Variables "write" to send over SPI from the master
   //Odrive
-  uint16_t wOdR_pos;
-  uint16_t wOdL_pos;
+  uint16_t wOd0_pos;
+  uint16_t wOd1_pos;
   //AX
-  uint16_t wAxR_pos;
-  uint16_t wAxL_pos;
+  uint16_t wAx1_pos;
+  uint16_t wAx2_pos;
   //XM
-  uint16_t wXmR_pos;
-  uint16_t wXmL_pos;
+  uint16_t wXm1_pos;
+  uint16_t wXm2_pos;
 
   //Inutilisé
   uint16_t a;
@@ -110,16 +112,16 @@ struct TrameWrite
 struct TrameRead
 { // Variables "read" to send over SPI from the slave
   //Odrive
-  uint16_t rOdR_pos; //read Odrive Right
-  uint16_t rOdL_pos;
+  uint16_t rOd0_pos; //read Odrive Right
+  uint16_t rOd1_pos;
   //AX
-  uint16_t rAxR_pos;
-  uint16_t rAxL_pos;
+  uint16_t rAx1_pos;
+  uint16_t rAx2_pos;
   //XM
-  uint16_t rXmR_pos;
-  uint16_t rXmL_pos;
-  uint16_t rXmR_cur;
-  uint16_t rXmL_cur;
+  uint16_t rXm1_pos;
+  uint16_t rXm2_pos;
+  uint16_t rXm1_cur;
+  uint16_t rXm2_cur;
   //IMU
 
   int16_t rate[3];

@@ -299,21 +299,21 @@ int Yoyoman01Class::UpdateImu()
 
 int Yoyoman01Class::UpdateCmd()
 {
-    ptr_wbuffer->wAxR_pos = cmd[1]; //head
-    ptr_wbuffer->wAxL_pos = cmd[2]; //neck
-    ptr_wbuffer->wXmR_pos = cmd[3];
-    ptr_wbuffer->wXmL_pos = cmd[4];
-    ptr_wbuffer->wOdR_pos = cmd[5];
-    ptr_wbuffer->wOdL_pos = cmd[6];
+    ptr_wbuffer->wAx1_pos = cmd[1]; //head
+    ptr_wbuffer->wAx2_pos = cmd[2]; //neck
+    ptr_wbuffer->wXm1_pos = cmd[3];
+    ptr_wbuffer->wXm2_pos = cmd[4];
+    ptr_wbuffer->wOd0_pos = cmd[5];
+    ptr_wbuffer->wOd1_pos = cmd[6];
 }
 int Yoyoman01Class::UpdateSensor()
 {
-    pos [1]= ptr_rbuffer->rAxR_pos;
-    pos [2]= ptr_rbuffer->rAxL_pos;
-    pos [3]= ptr_rbuffer->rXmR_pos;
-    pos [4]= ptr_rbuffer->rXmL_pos;
-    pos [5]= ptr_rbuffer->rOdR_pos;
-    pos [6]= ptr_rbuffer->rOdL_pos;
+    pos [1]= ptr_rbuffer->rAx1_pos;
+    pos [2]= ptr_rbuffer->rAx2_pos;
+    pos [3]= ptr_rbuffer->rXm1_pos;
+    pos [4]= ptr_rbuffer->rXm2_pos;
+    pos [5]= ptr_rbuffer->rOd0_pos;
+    pos [6]= ptr_rbuffer->rOd1_pos;
 }
 
 int main(int argc, char **argv)
@@ -354,9 +354,9 @@ int main(int argc, char **argv)
 
         /* Affichage Reception */
         ROS_INFO("----Reception Position----\n");
-        ROS_INFO(" OD0 %d | OD1 %d | AX1 %d | AX2 %d | XM1 %d | XM2 %d \n", rbuffer.rOdR_pos, rbuffer.rOdL_pos, rbuffer.rAxR_pos, rbuffer.rAxL_pos, rbuffer.rXmR_pos, rbuffer.rXmL_pos);
+        ROS_INFO(" OD0 %d | OD1 %d | AX1 %d | AX2 %d | XM1 %d | XM2 %d \n", rbuffer.rOd0_pos, rbuffer.rOd1_pos, rbuffer.rAx1_pos, rbuffer.rAx2_pos, rbuffer.rXm1_pos, rbuffer.rXm2_pos);
         ROS_INFO("----Reception Courant----\n");
-        ROS_INFO(" XM1 %d | XM2 %d \n", rbuffer.rXmR_cur, rbuffer.rXmL_cur);
+        ROS_INFO(" XM1 %d | XM2 %d \n", rbuffer.rXm1_cur, rbuffer.rXm2_cur);
         ROS_INFO("----IMU Scaled----\n");
         ROS_INFO("Received X rate  %f \n", ptr_rate->rXrate_scaled);
         ROS_INFO("Received Y rate  %f \n", ptr_rate->rYrate_scaled);
