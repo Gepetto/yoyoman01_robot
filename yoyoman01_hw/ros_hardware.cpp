@@ -20,7 +20,7 @@
 //~ #include <control_toolbox/pid.h>
 //~ #include <std_msgs/Duration.h>
 
-#include "log.h"
+
 
 #include <iostream>
 #include <sstream>
@@ -31,7 +31,8 @@
 #include <hardware_interface/robot_hw.h>
 
 //*****************SPI**********************
-#include "/home/up-board/Documents/catkin_ws/src/yoyoman01_robot/yoyoman01_hw/variables.h"
+//~ #include "/home/fcaminad/Documents/GIT/catkin_ws/src/yoyoman01_robot/yoyoman01_hw/variables.h"
+#include "variables.h"
 #include "mraa/spi.h"
 int SpiFunction();
 

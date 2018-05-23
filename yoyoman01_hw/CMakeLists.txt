@@ -138,7 +138,7 @@ catkin_package(
 
 include_directories(
  #include 
- #include ../Documents/catkin_ws/src/yoyoman01_robot/publisher_package/variables.h
+  #${PROJECT_SOURCE_DIR}/variables.h
   ${catkin_INCLUDE_DIRS} 
   ${mraa_INCLUDE_DIRS}
 )
@@ -157,7 +157,8 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/yoyoman01_control_node.cpp)
-add_executable(ros_hardware ${PROJECT_SOURCE_DIR}/ros_hardware.cpp)
+set (SOURCES ${PROJECT_SOURCE_DIR}/ros_hardware.cpp ${PROJECT_SOURCE_DIR}/variables.h)
+add_executable(ros_hardware ${SOURCES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
