@@ -36,7 +36,7 @@
 #define BAUD_ODRIVE 115200
 //------------------SPI --------------------
 #ifdef ACTIV_CODEURS
-#define SIZE_BUFFER 42
+#define SIZE_BUFFER 44
 #else
 #define SIZE_BUFFER 30
 #endif
@@ -89,6 +89,8 @@ struct TrameWrite
   uint16_t wXm1_pos;
   uint16_t wXm2_pos;
 
+  uint16_t wspi_test;
+
   //Inutilisé
   uint16_t a;
   uint16_t b;
@@ -106,7 +108,6 @@ struct TrameWrite
   int16_t n;
   int16_t o;
   int16_t p;
-
 } wbuffer;
 
 struct TrameRead
@@ -123,10 +124,11 @@ struct TrameRead
   uint16_t rXm1_cur;
   uint16_t rXm2_cur;
   //IMU
-
   int16_t rate[3];
   int16_t acc[3];
   int16_t mag[3];
+
+  uint16_t rspi_test;
 
   //  int16_t rXrate;
   //  int16_t rYrate;
@@ -138,11 +140,13 @@ struct TrameRead
   //  int16_t rYmag;
   //  int16_t rZmag;
   //Codeurs
-
   int16_t rCodRMot;
   int16_t rCodRHip;
   int16_t rCodLMot;
   int16_t rCodLHip;
+
+//attention la deniere variable peut ne pas être stable
+
 
 } rbuffer;
 

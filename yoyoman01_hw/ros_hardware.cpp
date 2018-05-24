@@ -1,4 +1,3 @@
-
 /*Sources : 
 * https://github.com/jhu-lcsr-attic/barrett_control/blob/libbarrett/barrett_hw/src/wam_server.cpp
 * http://www.ensta-bretagne.fr/lemezo/files/teaching/ROS/TP1.pdf
@@ -19,8 +18,6 @@
 //~ #include <control_toolbox/filters.h>
 //~ #include <control_toolbox/pid.h>
 //~ #include <std_msgs/Duration.h>
-
-
 
 #include <iostream>
 #include <sstream>
@@ -66,6 +63,7 @@ class Yoyoman01Class : public hardware_interface::RobotHW
 {
   public:
     int ReadWrite();
+    int init();
     //~ bool SPI_check_connection();
 
     Yoyoman01Class() //ros::NodeHandle nh);
@@ -131,6 +129,7 @@ class Yoyoman01Class : public hardware_interface::RobotHW
     int UpdateImu();
     int UpdateCmd();
     int UpdateSensor();
+    int SPI_check_connection();
     hardware_interface::JointStateInterface jnt_state_interface;
     hardware_interface::PositionJointInterface jnt_pos_interface;
     hardware_interface::ImuSensorInterface imu_state_interface;
@@ -142,6 +141,245 @@ class Yoyoman01Class : public hardware_interface::RobotHW
     //protected :
     //rc_sot_system::DataToLog DataOneIter_;
 };
+
+int Yoyoman01Class::ReadWrite()
+{
+    //////////SPI INITIALISATION///////////////////////////////////////////
+    mraa_result_t status = MRAA_SUCCESS;
+    mraa_spi_context spi;
+
+    /* initialize mraa for the platform (not needed most of the times) */
+    mraa_init();
+
+    /* initialize SPI bus */
+    spi = mraa_spi_init(SPI_BUS);
+
+    if (spi == NULL)
+    {
+        fprintf(stderr, "Failed to initialize SPI\n");
+        mraa_deinit();
+        return EXIT_FAILURE;
+    }
+    /* set SPI frequency */
+    status = mraa_spi_frequency(spi, SPI_FREQ);
+    if (status != MRAA_SUCCESS)
+    {
+        goto err_exit;
+    }
+    /* set spi mode */
+    status = mraa_spi_mode(spi, MRAA_SPI_MODE0); //or (int) 0
+    if (status != MRAA_SUCCESS)
+    {
+        goto err_exit;
+    }
+
+    /* set big endian mode */
+    status = mraa_spi_lsbmode(spi, MSB_FIRST);
+    if (status != MRAA_SUCCESS)
+    {
+        goto err_exit;
+    }
+
+    /* MAX7219/21 chip needs the data in word size */
+    status = mraa_spi_bit_per_word(spi, 8);
+    if (status != MRAA_SUCCESS)
+    {
+        fprintf(stdout, "Failed to set SPI Device to 16Bit mode\n");
+        goto err_exit;
+    }
+
+    /* SPI TRANSFER */
+    mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //TX,RX,size
+
+    //---------------------
+    SPI_check_connection();
+    UpdateImu();
+    UpdateCmd();
+    UpdateSensor();
+    //---------------------
+
+err_exit:
+    mraa_result_print(status);
+    /* stop spi */
+    mraa_spi_stop(spi);
+    /* deinitialize mraa for the platform (not needed most of the times) */
+    mraa_deinit();
+    return EXIT_FAILURE;
+}
+
+int Yoyoman01Class::UpdateImu()
+{
+    /* Mise Ã  l'echelle DATA IMU */
+    ptr_rate->rXrate_scaled = (float)rbuffer.rate[0] / FACTOR_RATE;
+    ptr_rate->rYrate_scaled = (float)rbuffer.rate[1] / FACTOR_RATE;
+    ptr_rate->rZrate_scaled = (float)rbuffer.rate[2] / FACTOR_RATE;
+    ptr_acc->rXacc_scaled = (float)rbuffer.acc[0] / FACTOR_ACC;
+    ptr_acc->rYacc_scaled = (float)rbuffer.acc[1] / FACTOR_ACC;
+    ptr_acc->rZacc_scaled = (float)rbuffer.acc[2] / FACTOR_ACC;
+    ptr_mag->rXmag_scaled = (float)rbuffer.mag[0] / FACTOR_MAG;
+    ptr_mag->rYmag_scaled = (float)rbuffer.mag[1] / FACTOR_MAG;
+    ptr_mag->rZmag_scaled = (float)rbuffer.mag[2] / FACTOR_MAG;
+
+    hardware_interface::ImuSensorHandle::Data ImuData;
+    ImuData.angular_velocity = (double *)ptr_rate;
+    ImuData.linear_acceleration = (double *)ptr_acc;
+}
+
+/* get cmd from ROS */
+int Yoyoman01Class::UpdateCmd()
+{
+    ptr_wbuffer->wAx1_pos = cmd[1]; //head
+    ptr_wbuffer->wAx2_pos = cmd[2]; //neck
+    ptr_wbuffer->wXm1_pos = cmd[3];
+    ptr_wbuffer->wXm2_pos = cmd[4];
+    ptr_wbuffer->wOd0_pos = cmd[5];
+    ptr_wbuffer->wOd1_pos = cmd[6];
+}
+/* get position from STM32 */
+int Yoyoman01Class::UpdateSensor()
+{
+    pos[1] = ptr_rbuffer->rAx1_pos;
+    pos[2] = ptr_rbuffer->rAx2_pos;
+    pos[3] = ptr_rbuffer->rXm1_pos;
+    pos[4] = ptr_rbuffer->rXm2_pos;
+    pos[5] = ptr_rbuffer->rOd0_pos;
+    pos[6] = ptr_rbuffer->rOd1_pos;
+}
+
+int Yoyoman01Class::init()
+{
+}
+
+/* Compare the number received with the one sent */
+int Yoyoman01Class::SPI_check_connection()
+{
+    ptr_wbuffer->wspi_test = 36055; //number sent
+
+    if (wbuffer.wspi_test != rbuffer.rspi_test)
+    {
+        ROS_ERROR("SPI connection FAULT %d ", rbuffer.rspi_test);
+    }
+    else
+    {
+        ROS_INFO("SPI connection OK ");
+    }
+}
+
+int main(int argc, char **argv)
+{
+    Yoyoman01Class yoyoman01;
+    //controller_manager::ControllerManager cm(&yoyoman01);
+
+    /// Initialisation du node : le troisième argument est son nom
+    ros::init(argc, argv, "new_node");
+
+    /// Connexion au master et initialisation du NodeHandle qui permet d’avoir accès aux topics et services
+    ros::NodeHandle yoyoman01_nh;
+
+    /// Création du publisher avec
+    //−le type du message
+    //−le nom du topic
+    //−la taille du buffer de message à conserver en cas de surchage
+    //ros::Publisher  yoyoman01_pub = yoyoman01_nh.advertise<std_msgs::Float64>("/yoyoman01/Head_position_controller/command", 10);
+
+    /// La durée de la pause (voir le sleep) en Hz
+    ros::Rate loop_rate(50);
+
+    /// Boucle tant que le master existe (ros::ok())
+    while (ros::ok())
+    {
+        //-------------example ecriture imu--------------
+        //basic_string<> c=np.getName();
+        //std::cout<<  imuname<< std::endl;
+        //std::cout<< toto<< std::endl;
+        //ROS_INFO("IMU test  [%s] \n",*imuname);
+        //ROS_INFO("IMU test  [%f] \n", np.getName());
+        //--------------------------------
+
+        yoyoman01.ReadWrite();
+
+        /* Affichage Reception */
+        ROS_INFO("----Reception Position----\n");
+        ROS_INFO(" OD0 %d | OD1 %d | AX1 %d | AX2 %d | XM1 %d | XM2 %d \n", rbuffer.rOd0_pos, rbuffer.rOd1_pos, rbuffer.rAx1_pos, rbuffer.rAx2_pos, rbuffer.rXm1_pos, rbuffer.rXm2_pos);
+        ROS_INFO("----Reception Courant----\n");
+        ROS_INFO(" XM1 %d | XM2 %d \n", rbuffer.rXm1_cur, rbuffer.rXm2_cur);
+        ROS_INFO("----IMU Scaled----\n");
+        ROS_INFO("Received X rate  %f \n", ptr_rate->rXrate_scaled);
+        ROS_INFO("Received Y rate  %f \n", ptr_rate->rYrate_scaled);
+        ROS_INFO("Received Z rate  %f \n", ptr_rate->rZrate_scaled);
+        ROS_INFO("Received X accel %f  \n", ptr_acc->rXacc_scaled);
+        ROS_INFO("Received Y accel  %f  \n", ptr_acc->rYacc_scaled);
+        ROS_INFO("Received Z accel  %f  \n", ptr_acc->rZacc_scaled);
+        ROS_INFO("Received X mag  %f  \n", ptr_mag->rXmag_scaled);
+        ROS_INFO("Received Y mag  %f  \n", ptr_mag->rYmag_scaled);
+        ROS_INFO("Received Z mag  %f \n", ptr_mag->rZmag_scaled);
+
+        /// création d’un message de type String
+        std_msgs::Float64 msg;
+        /// affectation la valeur "hello" au champ data
+        msg.data = 10.2;
+        /// publication du message
+        //yoyoman01_pub.publish(msg);
+        /// fonction utile seulement dans le cas de l’utilisation d’un subscriver ou d’un server
+        //ros::spinOnce();
+        /// Pause
+        loop_rate.sleep();
+
+        // Il est également possible d’utiliser des Timers qui fonctionnent par interruption
+        // http://wiki.ros.org/roscpp_tutorials/Tutorials/Timers
+    }
+
+    return 0;
+}
+
+/* //~ bool Yoyoman01Class::SPI_check_connection()//const ros::Time time, const ros::Duration period)
+//~ {
+//~ mraa_spi_transfer_buf(spi,(uint8_t*)ptr_wbuffer ,(uint8_t*)ptr_rbuffer,SIZE_BUFFER);   //TX,RX,size
+
+//~ return true;
+//~ }
+
+//~ bool Yoyoman01Class::read()//const ros::Time time, const ros::Duration period)
+//~ {
+// Iterate over all devices
+//~ for(Wam4Map::iterator it = wam4s_.begin(); it != wam4s_.end(); ++it) {
+//~ this->read_wam(time, period, it->second);
+//~ }
+//~ for(Wam7Map::iterator it = wam7s_.begin(); it != wam7s_.end(); ++it) {
+//~ this->read_wam(time, period, it->second);
+//~ }
+
+//~ return true;
+//~ }
+
+//~ void Yoyoman01Class::write()//const ros::Time time, const ros::Duration period)
+//~ {
+// Iterate over all devices
+//~ for(Wam4Map::iterator it = wam4s_.begin(); it != wam4s_.end(); ++it) {
+//~ this->write_wam(time, period, it->second);
+//~ }
+//~ for(Wam7Map::iterator it = wam7s_.begin(); it != wam7s_.end(); ++it) {
+//~ this->write_wam(time, period, it->second);
+//~ }
+//~ }
+
+//~ template <size_t DOF>
+//~ bool Yoyoman01Class::read_wam()//const ros::Time time, const ros::Duration period,boost::shared_ptr<Yoyoman01Class::WamDevice<DOF> > device)
+//~ {
+//~ // Poll the hardware
+//~ try {
+//~ device->interface->update();
+//~ } catch (const std::runtime_error& e) {
+//~ if (device->interface->getSafetyModule() != NULL  &&
+//~ device->interface->getSafetyModule()->getMode(true) == barrett::SafetyModule::ESTOP)
+//~ {
+//~ ROS_ERROR_STREAM("systems::LowLevelWamWrapper::Source::operate(): E-stop! Cannot communicate with Pucks.");
+//~ return false;
+//~ } else {
+//~ throw;
+//~ }
+//~ } */
+
 
 //-----------------------------------
 //--------PARTIE INSPIREE SOT POUR IMU ---------
@@ -214,222 +452,3 @@ namespace sot_controller{
 //-----------------------------------
 //-----------------------------------
 */
-
-int Yoyoman01Class::ReadWrite()
-{
-    //////////SPI INITIALISATION///////////////////////////////////////////
-    mraa_result_t status = MRAA_SUCCESS;
-    mraa_spi_context spi;
-
-    /* initialize mraa for the platform (not needed most of the times) */
-    mraa_init();
-
-    /* initialize SPI bus */
-    spi = mraa_spi_init(SPI_BUS);
-
-    if (spi == NULL)
-    {
-        fprintf(stderr, "Failed to initialize SPI\n");
-        mraa_deinit();
-        return EXIT_FAILURE;
-    }
-    /* set SPI frequency */
-    status = mraa_spi_frequency(spi, SPI_FREQ);
-    if (status != MRAA_SUCCESS)
-    {
-        goto err_exit;
-    }
-    /* set spi mode */
-    status = mraa_spi_mode(spi, MRAA_SPI_MODE0); //or (int) 0
-    if (status != MRAA_SUCCESS)
-    {
-        goto err_exit;
-    }
-
-    /* set big endian mode */
-    status = mraa_spi_lsbmode(spi, MSB_FIRST);
-    if (status != MRAA_SUCCESS)
-    {
-        goto err_exit;
-    }
-
-    /* MAX7219/21 chip needs the data in word size */
-    status = mraa_spi_bit_per_word(spi, 8);
-    if (status != MRAA_SUCCESS)
-    {
-        fprintf(stdout, "Failed to set SPI Device to 16Bit mode\n");
-        goto err_exit;
-    }
-
-    /* SPI TRANSFER */
-    mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //TX,RX,size
-
-    //---------------------
-    UpdateImu();
-    UpdateCmd();
-    UpdateSensor();
-    //---------------------
-
-err_exit:
-    mraa_result_print(status);
-    /* stop spi */
-    mraa_spi_stop(spi);
-    /* deinitialize mraa for the platform (not needed most of the times) */
-    mraa_deinit();
-    return EXIT_FAILURE;
-}
-
-int Yoyoman01Class::UpdateImu()
-{
-    /* Mise Ã  l'echelle DATA IMU */
-    ptr_rate->rXrate_scaled = (float)rbuffer.rate[0] / FACTOR_RATE;
-    ptr_rate->rYrate_scaled = (float)rbuffer.rate[1] / FACTOR_RATE;
-    ptr_rate->rZrate_scaled = (float)rbuffer.rate[2] / FACTOR_RATE;
-    ptr_acc->rXacc_scaled = (float)rbuffer.acc[0] / FACTOR_ACC;
-    ptr_acc->rYacc_scaled = (float)rbuffer.acc[1] / FACTOR_ACC;
-    ptr_acc->rZacc_scaled = (float)rbuffer.acc[2] / FACTOR_ACC;
-    ptr_mag->rXmag_scaled = (float)rbuffer.mag[0] / FACTOR_MAG;
-    ptr_mag->rYmag_scaled = (float)rbuffer.mag[1] / FACTOR_MAG;
-    ptr_mag->rZmag_scaled = (float)rbuffer.mag[2] / FACTOR_MAG;
-
-    hardware_interface::ImuSensorHandle::Data ImuData;
-    ImuData.angular_velocity = (double *)ptr_rate;
-    ImuData.linear_acceleration = (double *)ptr_acc;
-}
-
-int Yoyoman01Class::UpdateCmd()
-{
-    ptr_wbuffer->wAx1_pos = cmd[1]; //head
-    ptr_wbuffer->wAx2_pos = cmd[2]; //neck
-    ptr_wbuffer->wXm1_pos = cmd[3];
-    ptr_wbuffer->wXm2_pos = cmd[4];
-    ptr_wbuffer->wOd0_pos = cmd[5];
-    ptr_wbuffer->wOd1_pos = cmd[6];
-}
-int Yoyoman01Class::UpdateSensor()
-{
-    pos [1]= ptr_rbuffer->rAx1_pos;
-    pos [2]= ptr_rbuffer->rAx2_pos;
-    pos [3]= ptr_rbuffer->rXm1_pos;
-    pos [4]= ptr_rbuffer->rXm2_pos;
-    pos [5]= ptr_rbuffer->rOd0_pos;
-    pos [6]= ptr_rbuffer->rOd1_pos;
-}
-
-int main(int argc, char **argv)
-{
-    Yoyoman01Class yoyoman01;
-    //controller_manager::ControllerManager cm(&yoyoman01);
-
-    /// Initialisation du node : le troisième argument est son nom
-    ros::init(argc, argv, "new_node");
-
-    /// Connexion au master et initialisation du NodeHandle qui permet d’avoir accès aux topics et services
-    ros::NodeHandle yoyoman01_nh;
-
-    /// Création du publisher avec
-    //−le type du message
-    //−le nom du topic
-    //−la taille du buffer de message à conserver en cas de surchage
-    //ros::Publisher  yoyoman01_pub = yoyoman01_nh.advertise<std_msgs::Float64>("/yoyoman01/Head_position_controller/command", 10);
-
-    /// La durée de la pause (voir le sleep) en Hz
-    ros::Rate loop_rate(100);
-
-    /// Boucle tant que le master existe (ros::ok())
-    while (ros::ok())
-    {
-        //-------------example ecriture imu--------------
-
-        //np.ImuSensorHandle
-
-        //basic_string<> c=np.getName();
-        //std::cout<<  imuname<< std::endl;
-        //std::cout<< toto<< std::endl;
-        //ROS_INFO("IMU test  [%s] \n",*imuname);
-        //ROS_INFO("IMU test  [%f] \n", np.getName());
-        //--------------------------------
-
-        yoyoman01.ReadWrite();
-
-        /* Affichage Reception */
-        ROS_INFO("----Reception Position----\n");
-        ROS_INFO(" OD0 %d | OD1 %d | AX1 %d | AX2 %d | XM1 %d | XM2 %d \n", rbuffer.rOd0_pos, rbuffer.rOd1_pos, rbuffer.rAx1_pos, rbuffer.rAx2_pos, rbuffer.rXm1_pos, rbuffer.rXm2_pos);
-        ROS_INFO("----Reception Courant----\n");
-        ROS_INFO(" XM1 %d | XM2 %d \n", rbuffer.rXm1_cur, rbuffer.rXm2_cur);
-        ROS_INFO("----IMU Scaled----\n");
-        ROS_INFO("Received X rate  %f \n", ptr_rate->rXrate_scaled);
-        ROS_INFO("Received Y rate  %f \n", ptr_rate->rYrate_scaled);
-        ROS_INFO("Received Z rate  %f \n", ptr_rate->rZrate_scaled);
-        ROS_INFO("Received X accel %f  \n", ptr_acc->rXacc_scaled);
-        ROS_INFO("Received Y accel  %f  \n", ptr_acc->rYacc_scaled);
-        ROS_INFO("Received Z accel  %f  \n", ptr_acc->rZacc_scaled);
-        ROS_INFO("Received X mag  %f  \n", ptr_mag->rXmag_scaled);
-        ROS_INFO("Received Y mag  %f  \n", ptr_mag->rYmag_scaled);
-        ROS_INFO("Received Z mag  %f \n", ptr_mag->rZmag_scaled);
-
-        /// création d’un message de type String
-        std_msgs::Float64 msg;
-        /// affectation la valeur "hello" au champ data
-        msg.data = 10.2;
-        /// publication du message
-        //yoyoman01_pub.publish(msg);
-        /// fonction utile seulement dans le cas de l’utilisation d’un subscriver ou d’un server
-        //ros::spinOnce();
-        /// Pause
-        loop_rate.sleep();
-
-        // Il est également possible d’utiliser des Timers qui fonctionnent par interruption
-        // http://wiki.ros.org/roscpp_tutorials/Tutorials/Timers
-    }
-
-    return 0;
-}
-
-//~ bool Yoyoman01Class::SPI_check_connection()//const ros::Time time, const ros::Duration period)
-//~ {
-//~ mraa_spi_transfer_buf(spi,(uint8_t*)ptr_wbuffer ,(uint8_t*)ptr_rbuffer,SIZE_BUFFER);   //TX,RX,size
-
-//~ return true;
-//~ }
-
-//~ bool Yoyoman01Class::read()//const ros::Time time, const ros::Duration period)
-//~ {
-// Iterate over all devices
-//~ for(Wam4Map::iterator it = wam4s_.begin(); it != wam4s_.end(); ++it) {
-//~ this->read_wam(time, period, it->second);
-//~ }
-//~ for(Wam7Map::iterator it = wam7s_.begin(); it != wam7s_.end(); ++it) {
-//~ this->read_wam(time, period, it->second);
-//~ }
-
-//~ return true;
-//~ }
-
-//~ void Yoyoman01Class::write()//const ros::Time time, const ros::Duration period)
-//~ {
-// Iterate over all devices
-//~ for(Wam4Map::iterator it = wam4s_.begin(); it != wam4s_.end(); ++it) {
-//~ this->write_wam(time, period, it->second);
-//~ }
-//~ for(Wam7Map::iterator it = wam7s_.begin(); it != wam7s_.end(); ++it) {
-//~ this->write_wam(time, period, it->second);
-//~ }
-//~ }
-
-//~ template <size_t DOF>
-//~ bool Yoyoman01Class::read_wam()//const ros::Time time, const ros::Duration period,boost::shared_ptr<Yoyoman01Class::WamDevice<DOF> > device)
-//~ {
-//~ // Poll the hardware
-//~ try {
-//~ device->interface->update();
-//~ } catch (const std::runtime_error& e) {
-//~ if (device->interface->getSafetyModule() != NULL  &&
-//~ device->interface->getSafetyModule()->getMode(true) == barrett::SafetyModule::ESTOP)
-//~ {
-//~ ROS_ERROR_STREAM("systems::LowLevelWamWrapper::Source::operate(): E-stop! Cannot communicate with Pucks.");
-//~ return false;
-//~ } else {
-//~ throw;
-//~ }
-//~ }
