@@ -21,6 +21,8 @@
 
 #include <iostream>
 #include <sstream>
+//#include <pthread.h>
+#include <time.h>
 
 #include <hardware_interface/imu_sensor_interface.h>
 #include <hardware_interface/joint_command_interface.h>
@@ -129,7 +131,7 @@ class Yoyoman01Class : public hardware_interface::RobotHW
     int UpdateImu();
     int UpdateCmd();
     int UpdateSensor();
-    int SPI_check_connection();
+    void SPI_check_connection();
     hardware_interface::JointStateInterface jnt_state_interface;
     hardware_interface::PositionJointInterface jnt_pos_interface;
     hardware_interface::ImuSensorInterface imu_state_interface;
@@ -238,8 +240,29 @@ int Yoyoman01Class::init()
         fprintf(stdout, "Failed to set SPI Device to 16Bit mode\n");
         goto err_exit;
     }
-    else{goto normal_exit;}
-    
+    else
+    {
+        ROS_INFO("SPI initialisation OK");
+        ROS_INFO("SPI connection : ");
+        ptr_wbuffer->wspi_test = 36055;                                                          //number sent
+        mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //TX,RX,size
+
+        if (wbuffer.wspi_test != rbuffer.rspi_test)
+        {
+            while (wbuffer.wspi_test != rbuffer.rspi_test)
+            {
+                ROS_ERROR("FAULT -> Reset stm32 <- %d ", rbuffer.rspi_test); // Au premier démarrage il se peut que 
+                mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //TX,RX,size
+            }
+            return 0;
+        }
+        else
+        {
+            ROS_INFO(" OK ");
+            return 0;
+        }
+        //goto normal_exit;
+    }
 
 err_exit:
     mraa_result_print(status);
@@ -249,12 +272,12 @@ err_exit:
     mraa_deinit();
     return EXIT_FAILURE;
 
-normal_exit:
-    return 0;
+    /* normal_exit:
+    return 0; */
 }
 
 /* Compare the number received with the one sent */
-int Yoyoman01Class::SPI_check_connection()
+void Yoyoman01Class::SPI_check_connection()
 {
     ptr_wbuffer->wspi_test = 36055; //number sent
 
@@ -273,20 +296,25 @@ int main(int argc, char **argv)
     Yoyoman01Class yoyoman01;
     //controller_manager::ControllerManager cm(&yoyoman01);
 
-    /// Initialisation du node : le troisiÃ¨me argument est son nom
+    /* Initialisation du node : le troisieme argument est son nom */
     ros::init(argc, argv, "new_node");
 
-    /// Connexion au master et initialisation du NodeHandle qui permet dâ€™avoir accÃ¨s aux topics et services
+    /* Connexion au master et initialisation du NodeHandle qui permet d avoir acces aux topics et services */
     ros::NodeHandle yoyoman01_nh;
 
-    /// CrÃ©ation du publisher avec
-    //âˆ’le type du message
-    //âˆ’le nom du topic
-    //âˆ’la taille du buffer de message Ã  conserver en cas de surchage
+    /*CrÃ©ation du publisher avec
+    le type du message
+    le nom du topic
+    la taille du buffer de message Ã  conserver en cas de surchage */
     //ros::Publisher  yoyoman01_pub = yoyoman01_nh.advertise<std_msgs::Float64>("/yoyoman01/Head_position_controller/command", 10);
 
-    /// La durÃ©e de la pause (voir le sleep) en Hz
+    /*La duree de la pause (voir le sleep) en Hz */
     ros::Rate loop_rate(1);
+
+    /* Gestion des threads */
+    ros::AsyncSpinner asyncSpinner(0); //unspecified (or set to 0), it will use a thread for each CPU core
+    asyncSpinner.start();
+
     yoyoman01.init();
     /// Boucle tant que le master existe (ros::ok())
     while (ros::ok())
