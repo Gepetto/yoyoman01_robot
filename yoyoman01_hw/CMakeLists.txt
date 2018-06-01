@@ -20,9 +20,10 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(PkgConfig REQUIRED)
+
 pkg_check_modules(mraa REQUIRED)
 
-
+find_package(Threads REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -159,6 +160,7 @@ include_directories(
 # add_executable(${PROJECT_NAME}_node src/yoyoman01_control_node.cpp)
 set (SOURCES ${PROJECT_SOURCE_DIR}/ros_hardware.cpp ${PROJECT_SOURCE_DIR}/variables.h)
 add_executable(ros_hardware ${SOURCES})
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -177,6 +179,8 @@ add_executable(ros_hardware ${SOURCES})
 MESSAGE(STATUS "MRAA_LIBRARIES: ${mraa_LIBRARIES}")
 target_link_libraries(ros_hardware ${catkin_LIBRARIES}  )
 target_link_libraries(ros_hardware mraa)
+
+target_link_libraries(ros_hardware Threads::Threads)
 
 #############
 ## Install ##
