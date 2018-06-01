@@ -1,0 +1,6 @@
+full_body:
+  kinematics_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+  kinematics_solver_timeout: 0.005
+  solve_type: Speed
+  position_only_ik: false
+

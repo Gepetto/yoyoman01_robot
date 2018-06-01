@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<robot name="robot">
+
+
+   <group name="full_body">
+      <joint name="Rarm" />
+      <joint name="Larm" />
+      <joint name="RHip" />
+      <joint name="LHip" />
+      <joint name="Head" />
+      <joint name="Neck" />
+      <link name="LHipLink" />
+      <link name="LArmLink" />
+      <link name="NeckLink" />
+      <link name="HeadLink" />
+      <link name="RHipLink" />
+      <link name="RArmLink" />
+      <joint name="fixed" />
+   </group>
+
+
+</robot>

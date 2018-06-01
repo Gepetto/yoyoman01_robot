@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="home" default="true"/>
+
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find yoyoman01_gazebo)/worlds/yoyoman01.world"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description"
+    command="$(find xacro)/xacro --inorder '$(find yoyoman01_description)/urdf/yoyoman01.xacro'" />
+
+  <arg name="gzpose" default="-x 0.0 -y 0.0 -z 0.86 -R 0.0 -P 0.0 -Y 0.0 -J Head 0.0 -J Neck 0.0 -J Rarm 0.0 -J Larm 0.0 -J RHip 0.0 -J LHip 0.0 -u"/>
+  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-urdf -model yoyoman01 -param robot_description $(arg gzpose)"/>
+
+
+  <!-- ros_control yoyoman01 launch file -->
+
+  <group if="$(arg home)">
+      <node name="home" pkg="yoyoman01_traject" type="home.py" output="screen"/>
+  </group>
+
+  <include file="$(find yoyoman01_traject)/launch/moveit_rviz.launch"/>
+
+
+
+
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+
+  <arg name="info" default="$(arg debug)" />  
+  <arg unless="$(arg info)" name="command_args" value="" />
+  <arg if="$(arg info)" name="command_args" value="--debug" />
+
+  <arg name="allow_trajectory_execution" default="true"/> 
+  <arg name="fake_execution" default="false"/>
+  <arg name="max_safe_path_cost" default="1"/>
+  <arg name="jiggle_fraction" default="0.05" />
+  <arg name="publish_monitored_planning_scene" default="true"/>
+
+
+  <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen" args="$(arg command_args)">
+    <!-- Set the display variable, in case OpenGL code is used internally -->
+    <env name="DISPLAY" value="$(optenv DISPLAY :0)" />
+
+
+    <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
+    <param name="max_safe_path_cost" value="$(arg max_safe_path_cost)"/>
+    <param name="jiggle_fraction" value="$(arg jiggle_fraction)" />
+
+    <!-- MoveGroup capabilities to load -->
+    <param name="capabilities" value="move_group/MoveGroupCartesianPathService
+				      move_group/MoveGroupExecuteService
+				      move_group/MoveGroupKinematicsService
+				      move_group/MoveGroupMoveAction
+				      move_group/MoveGroupPickPlaceAction
+				      move_group/MoveGroupPlanService
+				      move_group/MoveGroupQueryPlannersService
+				      move_group/MoveGroupStateValidationService
+				      move_group/MoveGroupGetPlanningSceneService
+              move_group/ClearOctomapService
+				      " />
+
+    <!-- Publish the planning scene of the physical robot so that rviz plugin can know actual robot -->
+    <param name="planning_scene_monitor/publish_planning_scene" value="$(arg publish_monitored_planning_scene)" />
+    <param name="planning_scene_monitor/publish_geometry_updates" value="$(arg publish_monitored_planning_scene)" />
+    <param name="planning_scene_monitor/publish_state_updates" value="$(arg publish_monitored_planning_scene)" />
+    <param name="planning_scene_monitor/publish_transforms_updates" value="$(arg publish_monitored_planning_scene)" />
+  </node>
+
+</launch>

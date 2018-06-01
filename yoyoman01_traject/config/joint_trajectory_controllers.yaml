@@ -1,0 +1,42 @@
+yoyoman01:
+ joint_state_controller:
+   type: joint_state_controller/JointStateController
+   publish_rate: 50
+
+ full_body_controller:
+   type: "effort_controllers/JointTrajectoryController"
+   joints:
+     - Rarm
+     - Larm
+     - RHip
+     - LHip
+     - Head
+     - Neck
+
+   gains:
+     Rarm: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     Larm: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     RHip: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     LHip: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     Head: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     Neck: {p: 150,  d: 1, i: 1, i_clamp: 1}
+
+   constraints:
+     goal_time: &goal_time_constraint 0.6
+     stopped_velocity_tolerance: &stopped_velocity_constraint 5.0 # FIXME: See #8429
+     Rarm:
+       goal: &goal_pos_constraint 0.02
+     Larm:
+       goal: *goal_pos_constraint
+     RHip:
+       goal: *goal_pos_constraint
+     LHip:
+       goal: *goal_pos_constraint
+     Head:
+       goal: *goal_pos_constraint
+     Neck:
+       goal: *goal_pos_constraint
+
+   state_publish_rate:  25            # Override default
+   action_monitor_rate: 30            # Override default
+   stop_trajectory_duration: 0   
