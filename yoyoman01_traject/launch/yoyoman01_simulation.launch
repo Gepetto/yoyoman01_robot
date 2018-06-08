@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+ <include file="$(find yoyoman01_traject)/launch/world.launch"/>
+ <node name="pause"  pkg="yoyoman01_traject" type="pause_gazebo.py" output="screen"/>  
+ <node name="bringup_yoyoman01" pkg="yoyoman01_traject" type="bringup_yoyoman01.py" output="screen"/>
+ <node name="bringup_controllers" pkg="yoyoman01_traject" type="bringup_controller.py" output="screen"/>
+ <node name="bringup_play_motion" pkg="yoyoman01_traject" type="bringup_play_motion.py" output="screen"/>
+ <node name="movement" pkg="yoyoman01_traject" type="movement.py" output="screen"/>
+</launch>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
   <!-- Load joint controller configurations from YAML file to parameter server -->
@@ -8,14 +9,19 @@
   <!-- load the controllers -->
 
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-	output="screen" ns="/yoyoman01" args="joint_state_controller
+	output="screen"  args="joint_state_controller
 					 full_body_controller
 					  "/>
 
   <!-- convert joint states to TF transforms for rviz, etc -->
+  <arg name="tf_prefix" default=""/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
 	respawn="false" output="screen">
-    <remap from="/joint_states" to="/yoyoman01/joint_states" />
+    <param name="publish_frequency" type="double" value="50.0"/>
+    <param name="tf_prefix" type="string" value="$(arg tf_prefix)"/>
+    <!--remap from="/joint_states" to="/yoyoman01/joint_states" /-->
   </node>
+
+   <!--node pkg="tf_lookup" type="tf_lookup" name="tf_lookup" output="screen"/-->
 
 </launch>

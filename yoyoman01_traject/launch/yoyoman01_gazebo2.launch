@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <launch>
 
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
@@ -7,6 +8,8 @@
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
+  <arg name="home" default="true"/>
+
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -27,7 +30,30 @@
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model yoyoman01 -param robot_description $(arg gzpose)"/>
 
+
+
+  <arg name="moveit_manage_controllers" default="true"/>
+  <param name="moveit_manage_controllers" value="$(arg moveit_manage_controllers)"/>
+  <param name="allowed_execution_duration_scaling" value="1.2"/> <!-- default 1.2 -->
+  <param name="allowed_goal_duration_margin" value="0.5"/> <!-- default 0.5 -->
   <!-- ros_control yoyoman01 launch file -->
-  <!--include file="$(find yoyoman01_control)/launch/yoyoman01_control.launch" /-->
+
+  <!--group if="$(arg home)">
+      <node name="home"  pkg="yoyoman01_traject" type="home.py" output="screen"/>
+  </group> -->
+
+  <include file="$(find yoyoman01_moveit_config)/launch/demo.launch"/>
+
+  <!-- OMPL Plugin for MoveIt! -->
+  <include file="$(find yoyoman01_traject)/launch/ompl_planning.launch"/>
+  <!--rosparam file="$(find yoyoman01_traject)/config/kinematics_kdl.yaml" command="load"/>
+  <rosparam file="$(find yoyoman01_traject)/config/kinematics_trac_ik.yaml" command="load"/-->
+  <arg name="allow_trajectory_execution" default="true"/> 
+  <!-- Trajectory Execution Functionality -->
+
+
+
+    
+
 
 </launch>
