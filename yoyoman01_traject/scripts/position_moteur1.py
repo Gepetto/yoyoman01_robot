@@ -1216,6 +1216,7 @@ q_v = [
 print(len(q_v))
 M=[]
 T=[]
+temps=t_v[1]-t_v[0]
 longueur=len(t_v)
 for k in range (0,10*longueur):
 	L=[]
@@ -1235,12 +1236,15 @@ for k in range (0,10*longueur):
 			else:
 				L=L+[q_v[k%longueur][i]]
 	M=M+[L]
-	T=T+[k*0.0012064276757]
+	T=T+[k*temps]
 print(len(M))
 
-p
-for k in range (0,201):
+#pour le yoyoman01_motions.yaml
+for k in range (0,int(longueur/3)):
 #	print("    - positions: [%f, %f, %f, %f, %f, %f]\n", q_v[10*k][11], q_v[10*k][7], q_v[10*k][10], q_v[10*k][6], q_v[10*k][9], q_v[10*k][8])
 #	print ("      time_frome_start: %f", t_v[10*k])
 	print ("       - positions: ["+str(M[30*k][11])+", "+str(M[30*k][7])+", "+str(M[30*k][10])+", "+str(M[30*k][6])+", "+str(M[30*k][9])+", "+str(M[30*k][8])+"]")
 	print ("         time_from_start: "+str(T[30*k]))
+
+#pour le yoyoman01_gazebo.launch ligne 31
+print ("\n \n -x 0.0 -y 0.0 -z 1 -R 0.0 -P 0.0 -Y 0.0 -J Head "+str(q_v[0][9])+" -J Neck "+str(q_v[0][8])+" -J Rarm "+str(q_v[0][11])+" -J Larm "+str(q_v[0][7])+" -J RHip "+str(q_v[0][10])+" -J LHip "+str(q_v[0][6])+" -u")

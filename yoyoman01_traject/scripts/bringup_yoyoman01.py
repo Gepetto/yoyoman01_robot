@@ -4,7 +4,7 @@ import rospy
 import roslaunch
 
 if __name__ == "__main__":
-  rospy.sleep(3)
+  rospy.sleep(2)
   
   #launch controller
   rospy.init_node('tester', anonymous=True)

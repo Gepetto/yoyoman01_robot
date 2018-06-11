@@ -4,8 +4,7 @@ import rospy
 import roslaunch
 
 if __name__ == "__main__":
-  rospy.sleep(8)
-  
+  rospy.sleep(4)
   #launch controller
   rospy.init_node('tester', anonymous=True)
   uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)

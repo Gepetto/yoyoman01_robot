@@ -23,12 +23,12 @@
 
   <!-- Load the URDF into the ROS Parameter Server -->
   <param name="robot_description"
-    command="$(find xacro)/xacro --inorder '$(find yoyoman01_description)/urdf/yoyoman01.xacro'" />
+    command="$(find xacro)/xacro --inorder '$(find yoyoman01_traject)/urdf/yoyoman01.xacro'" />
 
   <!--param name="robot_description2"
     command="$(find xacro)/xacro inorder '$(find yoyoman01_traject)/urdf/barriere.xacro'" /-->
 
-  <arg name="gzpose" default="-x 0.0 -y 0.0 -z 0.81 -R 0.0 -P 0.0 -Y 0.0 -J Head -0.0176026624351 -J Neck -0.189377988897 -J Rarm -0.207021902834 -J Larm 0.0776166717721 -J RHip 0.185405351426 -J LHip -0.376093242717 -u"/>
+  <arg name="gzpose" default="-x 0.0 -y 0.0 -z 1 -R 0.0 -P 0.0 -Y 0.0 -J Head -0.0176026624351 -J Neck -0.189377988897 -J Rarm -0.207021902834 -J Larm 0.0776166717721 -J RHip 0.185405351426 -J LHip -0.376093242717 -u"/>
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model yoyoman01 -param robot_description $(arg gzpose)"/>

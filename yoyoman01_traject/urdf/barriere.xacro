@@ -22,24 +22,13 @@
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/barre600.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-    <origin rpy="0 0 0" xyz="-0.3 0 0"/>  
+    <origin rpy="0 0 0" xyz="-0.5 0 0"/>  
     </visual>
     <collision>
-      <selfCollide>true</selfCollide>
       <geometry>
         <mesh filename="package://yoyoman01_description/meshes/barre.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-    <origin rpy="0 0 0" xyz="-0.3 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.5 0 0"/>
     </collision>
   </link> 
-  <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <!--robotNamespace>/yoyoman01</robotNamespace-->
-    </plugin>
-    <selfCollide>true</selfCollide>
-    <static>false</static>
-    <turnGravityOff>false</turnGravityOff>
-  </gazebo>
 
-
-</robot>
