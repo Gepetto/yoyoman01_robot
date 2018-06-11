@@ -6,4 +6,3 @@ int main(int argc, char **argv){
   std_srvs::Empty emptySrv;
   pauseGazebo.call(emptySrv);
 }
- 

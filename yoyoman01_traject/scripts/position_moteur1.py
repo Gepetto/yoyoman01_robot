@@ -1247,4 +1247,4 @@ for k in range (0,int(longueur/3)):
 	print ("         time_from_start: "+str(T[30*k]))
 
 #pour le yoyoman01_gazebo.launch ligne 31
-print ("\n \n -x 0.0 -y 0.0 -z 1 -R 0.0 -P 0.0 -Y 0.0 -J Head "+str(q_v[0][9])+" -J Neck "+str(q_v[0][8])+" -J Rarm "+str(q_v[0][11])+" -J Larm "+str(q_v[0][7])+" -J RHip "+str(q_v[0][10])+" -J LHip "+str(q_v[0][6])+" -u")
+print ("\n \n -x "+str(q_v[0][0])+" -y "+str(q_v[0][1])+" -z "+str(q_v[0][2])+" -Y "+str(q_v[0][3])+" -P "+str(q_v[0][4])+" -R "+str(q_v[0][5])+" -J Head "+str(q_v[0][9])+" -J Neck "+str(q_v[0][8])+" -J Rarm "+str(q_v[0][11])+" -J Larm "+str(q_v[0][7])+" -J RHip "+str(q_v[0][10])+" -J LHip "+str(q_v[0][6])+" -u")
