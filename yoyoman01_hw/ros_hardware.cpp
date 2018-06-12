@@ -65,10 +65,12 @@ class Yoyoman01Class : public hardware_interface::RobotHW
 {
   public:
     int ReadWrite();
-    int init();
+    int SpiInit();
+    void SPI_check_connection();
     int UpdateImu();
     int UpdateCmd();
     int UpdateSensor();
+
     //~ bool SPI_check_connection();
 
     Yoyoman01Class() //ros::NodeHandle nh);
@@ -131,7 +133,6 @@ class Yoyoman01Class : public hardware_interface::RobotHW
     double imuregister[6];
 
   private:
-    void SPI_check_connection();
     hardware_interface::JointStateInterface jnt_state_interface;
     hardware_interface::PositionJointInterface jnt_pos_interface;
     hardware_interface::ImuSensorInterface imu_state_interface;
@@ -140,19 +141,14 @@ class Yoyoman01Class : public hardware_interface::RobotHW
     double vel[7];
     double eff[7];
     mraa_spi_context spi;
-    //protected :
-    //rc_sot_system::DataToLog DataOneIter_;
 };
 
 int Yoyoman01Class::ReadWrite()
 {
     /* SPI TRANSFER */
     mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //TX,RX,size
-
-    //---------------------
+    /* SPI VERIF */
     SPI_check_connection();
-
-    //---------------------
 }
 
 int Yoyoman01Class::UpdateImu()
@@ -172,16 +168,59 @@ int Yoyoman01Class::UpdateImu()
     ImuData.angular_velocity = (double *)ptr_rate;
     ImuData.linear_acceleration = (double *)ptr_acc;
 }
+float ph = 0;
+int cAx1_pos, cAx2_pos, cXm1_pos, cXm2_pos, cOd0_pos, cOd1_pos;
 
 /* get cmd from ROS */
 int Yoyoman01Class::UpdateCmd()
 {
-    ptr_wbuffer->wAx1_pos = cmd[1]; //head
-    ptr_wbuffer->wAx2_pos = cmd[2]; //neck
-    ptr_wbuffer->wXm1_pos = cmd[3];
-    ptr_wbuffer->wXm2_pos = cmd[4];
-    ptr_wbuffer->wOd0_pos = 1000; //cmd[5];
-    ptr_wbuffer->wOd1_pos = cmd[6];
+    cmd [5]= (0.6 * sin(ph));
+    cmd [6]= (0.6 * sin(ph));
+    /* Convert radians to HW position */
+    cAx1_pos = cmd[1] * (1023 / (2*3.1415));
+    cAx2_pos = cmd[2] * (1023 / (2*3.1415));
+    cXm1_pos = cmd[3] * (4095 / (2*3.1415));
+    cXm2_pos = cmd[4] * (4095 / (2*3.1415)); 
+    cOd0_pos = cmd[5] * (8192 / (2*3.1415))*(48/10);//wh*4.8=wm
+    cOd1_pos = cmd[6] * (8192 / (2*3.1415))*(48/10);
+
+    cAx1_pos = 512;
+    cAx2_pos = 512;
+    cXm1_pos = 2048;
+    cXm2_pos = 2048;
+    cOd0_pos = 0;//(8192 * (0.2 * cos(ph)));
+    cOd1_pos = 0;
+
+    /* Check the limits for AX */
+    if (cAx1_pos < 500 || cAx1_pos > 522 || cAx2_pos < 500 || cAx2_pos > 522)
+    {
+        ROS_WARN("AX cmd out of range");
+        return false;
+    }
+    /* Check the limits for XM */
+    if (cXm1_pos < 1948 || cXm1_pos > 2148 || cXm2_pos < 1948 || cXm2_pos > 2148)
+    {
+        ROS_WARN("Xm cmd out of range");
+        return false;
+    }
+    /* Check the limits for ODrive */
+    if (cOd0_pos < -4000 || cOd0_pos > 4000 || cOd1_pos < -4000 || cOd1_pos > 4000)
+    {
+        ROS_WARN("ODrive cmd out of range");
+        return false;
+    }
+    /* Write data */
+    else
+    {
+        ph = ph + 0.005;
+        ptr_wbuffer->wAx1_pos = cAx1_pos; //head
+        ptr_wbuffer->wAx2_pos = cAx2_pos; //neck
+        ptr_wbuffer->wXm1_pos = cXm1_pos; 
+        ptr_wbuffer->wXm2_pos = cXm2_pos;
+        ptr_wbuffer->wOd0_pos = cOd0_pos;
+        ptr_wbuffer->wOd1_pos = cOd1_pos;
+        return true;
+    }
 }
 /* get position from STM32 */
 int Yoyoman01Class::UpdateSensor()
@@ -194,7 +233,7 @@ int Yoyoman01Class::UpdateSensor()
     pos[6] = ptr_rbuffer->rOd1_pos;
 }
 
-int Yoyoman01Class::init()
+int Yoyoman01Class::SpiInit()
 {
     //////////SPI INITIALISATION///////////////////////////////////////////
     /* initialize mraa for the platform (not needed most of the times) */
@@ -233,35 +272,12 @@ int Yoyoman01Class::init()
     status = mraa_spi_bit_per_word(spi, 8);
     if (status != MRAA_SUCCESS)
     {
-        fprintf(stdout, "Failed to set SPI Device to 16Bit mode\n");
+        fprintf(stdout, "Failed to set SPI Device to 8Bit mode\n");
         goto err_exit;
     }
     else
     {
-        ROS_INFO("SPI initialisation OK");
-        ROS_INFO("SPI connection : ");
-        rbuffer.rspi_test = 0;                                                                   //reset value
-        wbuffer.wspi_test = 36055;                                                               //number sent
-        mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //Sends the value
-        sleep(1);
-        mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //receives the value
-        if (wbuffer.wspi_test != rbuffer.rspi_test)
-        {
-            while (wbuffer.wspi_test != rbuffer.rspi_test)
-            {
-                ROS_ERROR("FAULT -> Reset stm32 <- %d ", rbuffer.rspi_test);                             // Au premier démarrage il se peut que
-                mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //S/R until goods values
-                sleep(1);
-            }
-            return true;
-        }
-        else
-        {
-            ROS_INFO(" OK ");
-            sleep(1);
-            return true;
-        }
-        //goto normal_exit;
+        return 0;
     }
 
 err_exit:
@@ -271,45 +287,71 @@ err_exit:
     /* deinitialize mraa for the platform (not needed most of the times) */
     mraa_deinit();
     return EXIT_FAILURE;
-
-    /* normal_exit:
-    return 0; */
 }
 
-/* Compare the number received with the one sent */
 void Yoyoman01Class::SPI_check_connection()
 {
     ptr_wbuffer->wspi_test = 36055; //number sent
 
     if (wbuffer.wspi_test != rbuffer.rspi_test)
     {
-        ROS_ERROR("SPI connection FAULT %d ", rbuffer.rspi_test);
+        while (wbuffer.wspi_test != rbuffer.rspi_test)
+        {
+            mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //S/R until goods values
+            ROS_ERROR("SPI connection FAULT *Maybe Reset stm32* %d ", rbuffer.rspi_test);            // Au premier démarrage un reset du STm2 est parfois necessaire
+            sleep(1);                                                                                //wait 1s
+        }
     }
     else
     {
-        ROS_INFO("SPI connection OK ");
+        //ROS_INFO("SPI connection OK");
+        ptr_rbuffer->rspi_test = 0; //reset reception
     }
 }
 
-void *ROSloop(void *argument)
+struct arg_struct
+{
+    bool rosOk;
+} args;
+
+pthread_mutex_t mutx = PTHREAD_MUTEX_INITIALIZER; //mutex initialisation 
+
+void *RTloop(void *argument);
+void *ROSloop(void *argument);
+
+void *RTloop(void *argument)
 {
     Yoyoman01Class yoyoman01;
+    yoyoman01.SpiInit(); //Initialisation matérielle
 
-    ros::Rate loop_rate(1); /// Frequence boucle en Hz
-
-    while (ros::ok()) /// Boucle tant que le master existe (ros::ok())
+    while (args.rosOk) /// Boucle tant que le master existe (ros::ok())
     {
-
+        //ROS_INFO("----while hwloop----\n");
+        pthread_mutex_lock(&mutx); /* On verrouille les variables pour ce thread */
         yoyoman01.ReadWrite();
         yoyoman01.UpdateImu();
         yoyoman01.UpdateCmd();
         yoyoman01.UpdateSensor();
+        pthread_mutex_unlock(&mutx); /* On deverrouille les variables */
+        /// Pause
+        usleep(10000); //100HZ
+        //usleep(100000); //10HZ
+        //ros::spinOnce(); // will block while a callback is performed
+    }
+    pthread_exit(EXIT_SUCCESS);
+}
 
+void *ROSloop(void *argument)
+{
+    ros::Rate loop_rate(1); /// Frequence boucle en Hz
+
+    while (args.rosOk) // NOT real time loop
+    {
         //Affichage Reception
-        ROS_INFO("----Reception Position----\n");
+        ROS_INFO("----Reception Position----");
         ROS_INFO(" OD0 %d | OD1 %d | AX1 %d | AX2 %d | XM1 %d | XM2 %d \n", rbuffer.rOd0_pos, rbuffer.rOd1_pos, rbuffer.rAx1_pos, rbuffer.rAx2_pos, rbuffer.rXm1_pos, rbuffer.rXm2_pos);
-        ROS_INFO("----Reception Courant----\n");
-        ROS_INFO(" XM1 %d | XM2 %d \n", rbuffer.rXm1_cur, rbuffer.rXm2_cur);
+        ROS_INFO("----Envoie----\n");
+        ROS_INFO(" OD0 %d | OD1 %d | XM1 %d | XM2 %d \n", ptr_wbuffer->wOd0_pos,ptr_wbuffer->wOd1_pos,ptr_wbuffer->wXm1_pos, ptr_wbuffer->wXm2_pos);
         ROS_INFO("----IMU Scaled----\n");
         ROS_INFO("Received rate X %f | Y %f | Z %f\n", ptr_rate->rXrate_scaled, ptr_rate->rYrate_scaled, ptr_rate->rZrate_scaled);
         ROS_INFO("Received accel X %f | Y %f | Z %f\n", ptr_acc->rXacc_scaled, ptr_acc->rYacc_scaled, ptr_acc->rZacc_scaled);
@@ -319,26 +361,24 @@ void *ROSloop(void *argument)
         int od;
         scanf("%d", &od);
         wbuffer.wOd0_pos = od;
-        wbuffer.wOd1_pos = od;
+        wbuffer.wOd1_pos = od;*/
 
-        ROS_WARN("Entrer cmd XM [0;4095]: ");
+        /*         ROS_WARN("Entrer cmd XM [0;4095]: ");
         int test;
         scanf("%d", &test);
         wbuffer.wXm1_pos = test;
-        wbuffer.wXm2_pos = test;*/
-        /// Pause
+        wbuffer.wXm2_pos = test;  */
+
         loop_rate.sleep();
-        ///
-        //ros::spin();
     }
     pthread_exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char *argv[])
 {
+    Yoyoman01Class yoyoman01;
 
-    Yoyoman01Class yoyoman01; //Number of threads
-
+    /*---------------- ROS Stuff ------------------ */
     //controller_manager::ControllerManager cm(&yoyoman01);
 
     /* Initialisation du node : le troisieme argument est son nom */
@@ -347,24 +387,39 @@ int main(int argc, char *argv[])
     /* Connexion au master et initialisation du NodeHandle qui permet d avoir acces aux topics et services */
     ros::NodeHandle yoyoman01_nh;
 
-    yoyoman01.init();
+    /*---------------- Validation fonctionnement SPI ------------------ */
+    yoyoman01.SpiInit();              //Initialisation matérielle
+    yoyoman01.SPI_check_connection(); //Verifivation envoie/reception
 
     /*---------------- Gestion des threads ------------------ */
+    /* 
+    Thread "number 1" : Main  
+    Thread "number 2" : Rosloop
+    Thread "number 3" : RTloop
+    Thread "number 4" : spinner
+    */
+   ROS_INFO("Creation thread");
+    args.rosOk = (ros::ok);
+
     pthread_t thread1;
+    pthread_t thread2;
     int error_return;
 
-    struct sched_param params;
-    params.sched_priority = 90; // 1(low) to 99(high)
-
-    error_return = pthread_setschedparam(thread1, SCHED_RR, &params); // function sets the scheduling policy and parameters of the thread
-    error_return = pthread_create(&thread1, NULL, ROSloop, NULL);     // create a new thread
+    struct sched_param params1;
+    params1.sched_priority = 90; // 1(low) to 99(high)
+    error_return = pthread_setschedparam(thread1, SCHED_RR, &params1); // function sets the scheduling policy and parameters of the thread
+    error_return = pthread_create(&thread1, NULL, RTloop, &args);  // create a new thread
+    error_return = pthread_create(&thread2, NULL, ROSloop, &args); // create a new thread
 
     if (error_return)
     {
         ROS_ERROR("return code from pthread_create() is %d\n", error_return);
         exit(-1);
     }
-    pthread_join(thread1, NULL); // suspend execution of the calling thread until the target thread terminates
+
+    /* Spinners */
+    ros::MultiThreadedSpinner spinner(1); //unspecified (or set to 0), it will use a thread for each CPU core
+    spinner.spin();                       // spin() will not return until the node has been shutdown
 
     /*CrÃ©ation du publisher avec
     le type du message
@@ -372,13 +427,10 @@ int main(int argc, char *argv[])
     la taille du buffer de message Ã  conserver en cas de surchage */
     //ros::Publisher  yoyoman01_pub = yoyoman01_nh.advertise<std_msgs::Float64>("/yoyoman01/Head_position_controller/command", 10);
 
-    /* Gestion des threads */
-    /*     ros::AsyncSpinner asyncSpinner(0); //unspecified (or set to 0), it will use a thread for each CPU core
-    asyncSpinner.start();
- */
-
+    pthread_join(thread1, NULL); // Wait the end of the thread before exit
+    pthread_join(thread2, NULL); // Wait the end of the thread before exit
     /* Last thing that main() should do */
-    pthread_exit(EXIT_SUCCESS);
+    return 0;
 }
 
 /* //~ bool Yoyoman01Class::SPI_check_connection()//const ros::Time time, const ros::Duration period)

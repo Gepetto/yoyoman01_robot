@@ -80,8 +80,8 @@ uint8_t DIAGNOSTIC_STATUS;
 struct TrameWrite
 { // Variables "write" to send over SPI from the master
   //Odrive
-  uint16_t wOd0_pos;
-  uint16_t wOd1_pos;
+  int16_t wOd0_pos;
+  int16_t wOd1_pos;
   //AX
   uint16_t wAx1_pos;
   uint16_t wAx2_pos;
