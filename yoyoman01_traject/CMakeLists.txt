@@ -198,6 +198,6 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(set_gazebo_physic src/set_gazebo_physic.cpp)
-target_link_libraries(set_gazebo_physic ${catkin_LIBRARIES})
-add_dependencies(set_gazebo_physic yoyoman01_traject_generate_messages_cpp)
+add_executable(set_state src/set_state.cpp)
+target_link_libraries(set_state ${catkin_LIBRARIES})
+add_dependencies(set_state yoyoman01_traject_generate_messages_cpp)

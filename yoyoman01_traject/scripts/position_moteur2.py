@@ -1,3 +1,4 @@
+import math
 IS_ELASTIC = False
 IS_COT = False
 model = 'passive_walker'
@@ -2445,14 +2446,48 @@ for k in range (0,10*longueur):
 	T=T+[k*temps]
 print(len(M))
 
-#pour le yoyoman01_motions.yaml
+#pour le yoyoman01_motions.yaml IMPORTANT
 for k in range (0,int(longueur/3)-14):
 #	print("    - positions: [%f, %f, %f, %f, %f, %f]\n", q_v[10*k][11], q_v[10*k][7], q_v[10*k][10], q_v[10*k][6], q_v[10*k][9], q_v[10*k][8])
 #	print ("      time_frome_start: %f", t_v[10*k])
 	print ("       - positions: ["+str(M[30*k+14][11])+", "+str(M[30*k+14][7])+", "+str(M[30*k+14][10])+", "+str(M[30*k+14][6])+", "+str(M[30*k+14][9])+", "+str(M[30*k+14][8])+"]")
 	print ("         time_from_start: "+str(T[30*k+14]))
 
-#pour le yoyoman01_gazebo.launch ligne 31
-print ("\n \n -x "+str(q_v[30*14][0])+" -y "+str(q_v[30*14][1])+" -z "+str(q_v[30*14][2])+" -Y "+str(q_v[30*14][3])+" -P "+str(q_v[30*14][4])+" R "+str(q_v[30*14][5])+" -J Head "+str(q_v[30*14][9])+" -J Neck "+str(q_v[30*14][8])+" -J Rarm "+str(q_v[30*14][11])+" -J Larm "+str(q_v[30*14][7])+" -J RHip "+str(q_v[30*14][10])+" -J LHip "+str(q_v[30*14][6])+" -u")
+#pour le yoyoman01_gazebo.launch ligne 31 IMPORTANT
+print ("\n \n -x "+str(q_v[30*14][0])+" -y "+str(q_v[30*14][1])+" -z "+str(q_v[30*14][2])+" -Y "+str(q_v[30*14][3])+" -P "+str(q_v[30*14][4])+" -R "+str(q_v[30*14][5])+" -J Head "+str(q_v[30*14][9])+" -J Neck "+str(q_v[30*14][8])+" -J Rarm "+str(q_v[30*14][11])+" -J Larm "+str(q_v[30*14][7])+" -J RHip "+str(q_v[30*14][10])+" -J LHip "+str(q_v[30*14][6])+" -u")
 print (q_v[30*14][12],q_v[30*14][13],q_v[30*14][14],q_v[30*14][15],q_v[30*14][16],q_v[30*14][17])
-print("rosservice call /gazebo/set_model_state 'model_state: \n model_name: 'yoyoman01'\n pose: \n  position: \n   x: 0.116245021398 \n   y: -0.0763049851059 \n   z: 1.815279089915 \n  orientation: \n   x:0.0993339335946  \n   y: -0.0660306919426 \n   z: -0.00764170480825\n   w: 0.0 \n twist: \n  linear: \n   x: 0.18674257021624127 \n   y: 0.04029384457976738 \n   z: -0.008443649275220176 \n  angular: \n   x: 0.00025308740690237875 \n   y: 0.0 \n   z: 0.0 \n reference_frame: '''")
+
+
+
+
+#Ce qui suit n'est utile que pour des vitesses initiales et n'est pas encore au point
+Rv=q_v[30*14][16]*math.cos(q_v[30*14][3])+q_v[30*14][17]*math.sin(q_v[30*14][4])*math.sin(q_v[30*14][3])
+Pv=q_v[30*14][16]*math.sin(q_v[30*14][3])+q_v[30*14][17]*math.sin(q_v[30*14][4])*math.cos(q_v[30*14][3])
+Yv=q_v[30*14][17]*math.cos(q_v[30*14][4])+q_v[30*14][15]
+
+pt_ap=[ 0.729617, -0.486332, -0.4807705 ]
+pt_av=[ 0.728849, -0.4869079, -0.4813522 ]
+
+
+
+print ("\n \n linear: {x ="+str(q_v[30*14][12])+", y="+str(q_v[30*14][13])+", z ="+str(q_v[30*14][14])+"} angular: {x="+str(Rv)+", y="+str(Pv)+", z="+str(Yv)+"}")
+
+
+
+
+#Roll Pitch Yaw
+R=q_v[30*14-1][5]
+P=q_v[30*14-1][4]
+Y=q_v[30*14-1][3]
+
+#quaternion
+w=math.cos(R/2)*math.cos(P/2)*math.cos(Y/2)-math.sin(R/2)*math.sin(P/2)*math.sin(Y/2)
+x=math.sin(R/2)*math.cos(P/2)*math.cos(Y/2)+math.cos(R/2)*math.sin(P/2)*math.sin(Y/2)
+y=math.cos(R/2)*math.sin(P/2)*math.cos(Y/2)+math.sin(R/2)*math.cos(P/2)*math.sin(Y/2)
+z=math.cos(R/2)*math.sin(P/2)*math.cos(Y/2)-math.sin(R/2)*math.cos(P/2)*math.sin(Y/2)
+
+print("\n x: "+str(x)+", y: "+str(y)+", z: "+str(z)+", w: "+str(w))
+print(q_v[30*14-1][3], q_v[30*14-1][4], q_v[30*14-1][5])
+print(q_v[30*14][3], q_v[30*14][4], q_v[30*14][5])
+
+print ((pt_ap[0]-pt_av[0])/temps, (pt_ap[1]-pt_av[1])/temps, (pt_ap[2]-pt_av[2])/temps)

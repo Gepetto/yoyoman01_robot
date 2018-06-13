@@ -1,3 +1,4 @@
+import math
 IS_ELASTIC = False
 IS_COT = False
 model = 'passive_walker'
@@ -1217,6 +1218,8 @@ print(len(q_v))
 M=[]
 T=[]
 temps=t_v[1]-t_v[0]
+print(temps)
+temps=0.001009773938867
 longueur=len(t_v)
 for k in range (0,10*longueur):
 	L=[]
@@ -1239,12 +1242,53 @@ for k in range (0,10*longueur):
 	T=T+[k*temps]
 print(len(M))
 
-#pour le yoyoman01_motions.yaml
-for k in range (0,int(longueur/3)):
+#pour le yoyoman01_motions.yaml IMPORTANT
+for k in range (0,int(longueur/3)-10):
 #	print("    - positions: [%f, %f, %f, %f, %f, %f]\n", q_v[10*k][11], q_v[10*k][7], q_v[10*k][10], q_v[10*k][6], q_v[10*k][9], q_v[10*k][8])
 #	print ("      time_frome_start: %f", t_v[10*k])
-	print ("       - positions: ["+str(M[30*k][11])+", "+str(M[30*k][7])+", "+str(M[30*k][10])+", "+str(M[30*k][6])+", "+str(M[30*k][9])+", "+str(M[30*k][8])+"]")
-	print ("         time_from_start: "+str(T[30*k]))
+	print ("       - positions: ["+str(M[30*k+10][11])+", "+str(M[30*k+10][7])+", "+str(M[30*k+10][10])+", "+str(M[30*k+10][6])+", "+str(M[30*k+10][9])+", "+str(M[30*k+10][8])+"]")
+	print ("         time_from_start: "+str(T[30*k+10]))
 
-#pour le yoyoman01_gazebo.launch ligne 31
-print ("\n \n -x "+str(q_v[0][0])+" -y "+str(q_v[0][1])+" -z "+str(q_v[0][2])+" -Y "+str(q_v[0][3])+" -P "+str(q_v[0][4])+" -R "+str(q_v[0][5])+" -J Head "+str(q_v[0][9])+" -J Neck "+str(q_v[0][8])+" -J Rarm "+str(q_v[0][11])+" -J Larm "+str(q_v[0][7])+" -J RHip "+str(q_v[0][10])+" -J LHip "+str(q_v[0][6])+" -u")
+#pour le yoyoman01_gazebo.launch ligne 31 IMPORTANT
+print ("\n \n -x "+str(q_v[30*10][0])+" -y "+str(q_v[30*10][1])+" -z "+str(q_v[30*10][2])+" -Y "+str(q_v[30*10][3])+" -P "+str(q_v[30*10][4])+" R "+str(q_v[30*10][5])+" -J Head "+str(q_v[30*10][9])+" -J Neck "+str(q_v[30*10][8])+" -J Rarm "+str(q_v[30*10][11])+" -J Larm "+str(q_v[30*10][7])+" -J RHip "+str(q_v[30*10][10])+" -J LHip "+str(q_v[30*10][6])+" -u")
+print (q_v[30*10][12],q_v[30*10][13],q_v[30*10][14],q_v[30*10][15],q_v[30*10][16],q_v[30*10][17])
+
+
+
+
+
+
+
+#Ce qui suit n'est utile que pour des vitesses initiales et n'est pas encore au point
+Rv=q_v[30*10][16]*math.cos(q_v[30*10][3])+q_v[30*10][17]*math.sin(q_v[30*10][4])*math.sin(q_v[30*10][3])
+Pv=q_v[30*10][16]*math.sin(q_v[30*10][3])+q_v[30*10][17]*math.sin(q_v[30*10][4])*math.cos(q_v[30*10][3])
+Yv=q_v[30*10][17]*math.cos(q_v[30*10][4])+q_v[30*10][15]
+
+pt_ap=[ 0.729617, -0.486332, -0.4807705 ]
+pt_av=[ 0.728849, -0.4869079, -0.4813522 ]
+
+
+
+print ("\n \n linear: {x ="+str(q_v[30*10][12])+", y="+str(q_v[30*10][13])+", z ="+str(q_v[30*10][14])+"} angular: {x="+str(Rv)+", y="+str(Pv)+", z="+str(Yv)+"}")
+
+
+
+
+#Roll Pitch Yaw
+R=q_v[30*10-1][5]
+P=q_v[30*10-1][4]
+Y=q_v[30*10-1][3]
+
+#quaternion
+w=math.cos(R/2)*math.cos(P/2)*math.cos(Y/2)-math.sin(R/2)*math.sin(P/2)*math.sin(Y/2)
+x=math.sin(R/2)*math.cos(P/2)*math.cos(Y/2)+math.cos(R/2)*math.sin(P/2)*math.sin(Y/2)
+y=math.cos(R/2)*math.sin(P/2)*math.cos(Y/2)+math.sin(R/2)*math.cos(P/2)*math.sin(Y/2)
+z=math.cos(R/2)*math.sin(P/2)*math.cos(Y/2)-math.sin(R/2)*math.cos(P/2)*math.sin(Y/2)
+
+print("\n x: "+str(x)+", y: "+str(y)+", z: "+str(z)+", w: "+str(w))
+print(q_v[30*10-1][3], q_v[30*10-1][4], q_v[30*10-1][5])
+print(q_v[30*10][3], q_v[30*10][4], q_v[30*10][5])
+
+print ((pt_ap[0]-pt_av[0])/temps, (pt_ap[1]-pt_av[1])/temps, (pt_ap[2]-pt_av[2])/temps)
+
+
