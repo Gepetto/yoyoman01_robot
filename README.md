@@ -23,3 +23,10 @@ roslaunch yoyoman1_control yoyoman01_control.launch
 The starts the rqt perspective:
 roslaunch yoyoman1_control yoyoman01_rqt.launch
 
+Simulation
+================
+First put your movement and time matrices in a python code. Then copy the end of position_moteur.py to your code.
+
+Run your code and replace in yoyoman01_motions.yaml and yoyoman01_gazebo.launch the previous values with your values. 
+
+Finally launch yoyoman01_simulation on your shell.
