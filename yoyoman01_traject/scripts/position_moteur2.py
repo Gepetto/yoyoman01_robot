@@ -2423,7 +2423,6 @@ M=[]
 T=[]
 temps=t_v[1]-t_v[0]
 print(temps)
-temps=0.001009773938867
 longueur=len(t_v)
 for k in range (0,10*longueur):
 	L=[]
@@ -2455,7 +2454,6 @@ for k in range (0,int(longueur/3)-14):
 
 #pour le yoyoman01_gazebo.launch ligne 31 IMPORTANT
 print ("\n \n -x "+str(q_v[30*14][0])+" -y "+str(q_v[30*14][1])+" -z "+str(q_v[30*14][2])+" -Y "+str(q_v[30*14][3])+" -P "+str(q_v[30*14][4])+" -R "+str(q_v[30*14][5])+" -J Head "+str(q_v[30*14][9])+" -J Neck "+str(q_v[30*14][8])+" -J Rarm "+str(q_v[30*14][11])+" -J Larm "+str(q_v[30*14][7])+" -J RHip "+str(q_v[30*14][10])+" -J LHip "+str(q_v[30*14][6])+" -u")
-print (q_v[30*14][12],q_v[30*14][13],q_v[30*14][14],q_v[30*14][15],q_v[30*14][16],q_v[30*14][17])
 
 
 

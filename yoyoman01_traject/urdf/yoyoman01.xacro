@@ -289,6 +289,38 @@
     <link name="LFootLink">
   </link>
 
+<!-- IMU -->
+<link name="imu_link">
+  <inertial>
+    <mass value="0.00"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <inertia ixx="0.000" ixy="0" ixz="0" iyy="0.000" iyz="0" izz="0.000"/>
+  </inertial>
+
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <sphere radius="0.01"/>
+    </geometry>
+  </visual>
+
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <sphere radius="0.01"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- IMU Joint -->
+  <joint name="imu_joint" type="fixed">
+    <axis xyz="0 0 0"/> <!-- 0 1 0 -->
+    <origin xyz="0 0 0.15"/>
+    <parent link="HeadLink"/>
+    <child link="imu_link"/>
+  </joint>
+
+
 
 <!--
 **********Transmissions**********
@@ -360,11 +392,38 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <gazebo>
+  
+
+<gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <!--robotNamespace>/yoyoman01</robotNamespace-->
     </plugin>
     <selfCollide>true</selfCollide>
+
+<!-- IMU-->
+      <plugin name="imu_plugin" filename="libhector_gazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>1000</updateRate>
+            <bodyName>imu_link</bodyName>
+            <topicName>/imu</topicName>
+            <serviceName>/imu/calibrate</serviceName>
+            <accelOffset>0.0 0.0 0.0</accelOffset>
+            <accelDrift>0.0 0.0 0.0</accelDrift>
+            <accelDriftFrequency>0.0 0.0 0.0</accelDriftFrequency>
+            <accelGaussianNoise>0.0 0.0 0.0</accelGaussianNoise>
+            <rateOffset>0.0 0.0 0.0</rateOffset>
+            <rateDrift>0.0 0.0 0.0</rateDrift>
+            <rateDriftFrequency>0.0 0.0 0.0</rateDriftFrequency>
+            <rateGaussianNoise>0.0 0.0 0.0</rateGaussianNoise>
+            <headingOffset>0.0</headingOffset>
+            <headingDrift>0.0</headingDrift>
+            <headingDriftFrequency>0.0</headingDriftFrequency>
+            <headingGaussianNoise>0.0</headingGaussianNoise>
+            <rpyOffset>0.0 0.0 0.0</rpyOffset>
+            <xyzOffset>0.0 0.0 0.0</xyzOffset>
+            <gaussianNoise>0.0</gaussianNoise>
+        </plugin>
+
   </gazebo>
 
 </robot>

@@ -1219,7 +1219,6 @@ M=[]
 T=[]
 temps=t_v[1]-t_v[0]
 print(temps)
-temps=0.001009773938867
 longueur=len(t_v)
 for k in range (0,10*longueur):
 	L=[]
@@ -1243,19 +1242,36 @@ for k in range (0,10*longueur):
 print(len(M))
 
 #pour le yoyoman01_motions.yaml IMPORTANT
+print("\n \n yoyoman01_motions.yaml IMPORTANT \n")
 for k in range (0,int(longueur/3)-10):
 #	print("    - positions: [%f, %f, %f, %f, %f, %f]\n", q_v[10*k][11], q_v[10*k][7], q_v[10*k][10], q_v[10*k][6], q_v[10*k][9], q_v[10*k][8])
 #	print ("      time_frome_start: %f", t_v[10*k])
 	print ("       - positions: ["+str(M[30*k+10][11])+", "+str(M[30*k+10][7])+", "+str(M[30*k+10][10])+", "+str(M[30*k+10][6])+", "+str(M[30*k+10][9])+", "+str(M[30*k+10][8])+"]")
 	print ("         time_from_start: "+str(T[30*k+10]))
+print("\n end yoyoman01_motions.yaml IMPORTANT \n")
 
 #pour le yoyoman01_gazebo.launch ligne 31 IMPORTANT
-print ("\n \n -x "+str(q_v[30*10][0])+" -y "+str(q_v[30*10][1])+" -z "+str(q_v[30*10][2])+" -Y "+str(q_v[30*10][3])+" -P "+str(q_v[30*10][4])+" R "+str(q_v[30*10][5])+" -J Head "+str(q_v[30*10][9])+" -J Neck "+str(q_v[30*10][8])+" -J Rarm "+str(q_v[30*10][11])+" -J Larm "+str(q_v[30*10][7])+" -J RHip "+str(q_v[30*10][10])+" -J LHip "+str(q_v[30*10][6])+" -u")
-print (q_v[30*10][12],q_v[30*10][13],q_v[30*10][14],q_v[30*10][15],q_v[30*10][16],q_v[30*10][17])
+print("\n \n yoyoman01_gazebo.launch ligne 31 IMPORTANT")
+print ("\n  -x "+str(q_v[30*10][0])+" -y "+str(q_v[30*10][1])+" -z "+str(q_v[30*10][2])+" -Y "+str(q_v[30*10][3])+" -P "+str(q_v[30*10][4])+" R "+str(q_v[30*10][5])+" -J Head "+str(q_v[30*10][9])+" -J Neck "+str(q_v[30*10][8])+" -J Rarm "+str(q_v[30*10][11])+" -J Larm "+str(q_v[30*10][7])+" -J RHip "+str(q_v[30*10][10])+" -J LHip "+str(q_v[30*10][6])+" -u")
+print("\n end yoyoman01_gazebo.launch ligne 31 IMPORTANT \n")
 
 
+#Roll Pitch Yaw
+R=q_v[0][5]
+P=q_v[0][4]
+Y=q_v[0][3]
+
+#quaternion
+w=math.cos(R/2)*math.cos(P/2)*math.cos(Y/2)-math.sin(R/2)*math.sin(P/2)*math.sin(Y/2)
+x=math.sin(R/2)*math.cos(P/2)*math.cos(Y/2)+math.cos(R/2)*math.sin(P/2)*math.sin(Y/2)
+y=math.cos(R/2)*math.sin(P/2)*math.cos(Y/2)+math.sin(R/2)*math.cos(P/2)*math.sin(Y/2)
+z=math.cos(R/2)*math.sin(P/2)*math.cos(Y/2)-math.sin(R/2)*math.cos(P/2)*math.sin(Y/2)
 
 
+#pour le movement.py ligne 39 IMPORTANT
+print("\n \n movement.py ligne 39 IMPORTANT \n")
+print ("rosservice call /gazebo/set_model_state '{model_state: { model_name: yoyoman01, pose: { position: { x: "+str(M[0][0])+", y: "+str(M[0][1])+", z: "+str(M[0][2])+" }, orientation: { x: "+str(x)+", y: "+str(y)+", z: "+str(z)+", w: "+str(w)+" } }, twist: { linear: {x: 0, y: 0, z: 0} angular: {x: 0, y: 0, z: 0} } , reference_frame: world } }'")
+print("\n \n end movement.py ligne 39 IMPORTANT \n")
 
 
 
@@ -1269,7 +1285,7 @@ pt_av=[ 0.728849, -0.4869079, -0.4813522 ]
 
 
 
-print ("\n \n linear: {x ="+str(q_v[30*10][12])+", y="+str(q_v[30*10][13])+", z ="+str(q_v[30*10][14])+"} angular: {x="+str(Rv)+", y="+str(Pv)+", z="+str(Yv)+"}")
+print ("\n linear: {x: "+str(q_v[30*10][12])+", y: "+str(q_v[30*10][13])+", z: "+str(q_v[30*10][14])+"} angular: {x: "+str(Rv)+", y: "+str(Pv)+", z: "+str(Yv)+"}")
 
 
 

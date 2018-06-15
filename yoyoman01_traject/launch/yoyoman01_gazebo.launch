@@ -24,17 +24,15 @@
   <!-- Load the URDF into the ROS Parameter Server -->
   <param name="robot_description"
     command="$(find xacro)/xacro --inorder '$(find yoyoman01_traject)/urdf/yoyoman01.xacro'" />
-
-  <!--param name="robot_description2"
-    command="$(find xacro)/xacro inorder '$(find yoyoman01_traject)/urdf/barriere.xacro'" /-->
-
-  <arg name="gzpose" default=" -x 0.116245021398 -y -0.0763049851059 -z 0.815279089915 -Y -0.00764170480825 -P -0.0660306919426 -R 0.0993339335946 -J Head 0.0563966674293 -J Neck 0.00590268444954 -J Rarm 0.0774384285062 -J Larm 0.0938979361213 -J RHip 0.0661870126211 -J LHip 0.106014392861 -u"/>
-  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <arg name="gzpose" default=" -x -0.0476828472125 -y 0.0783765063995 -z 0.812800482088 -Y 0.011430247035 -P -0.0660936787846 R -0.0925838541673 -J Head 0.0440804140201 -J Neck 0.0508571399049 -J Rarm 0.196925254492 -J Larm -0.00445164650888 -J RHip -0.0890819266256 -J LHip 0.138506479551 -u"/>
+  
+<!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model yoyoman01 -param robot_description $(arg gzpose)"/>
-  <!--node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-    args="-urdf -model yoyoman01 -param robot_description2"/-->
 
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0" />
+  </node>
 
 
   <arg name="moveit_manage_controllers" default="true"/>
