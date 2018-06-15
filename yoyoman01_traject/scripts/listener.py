@@ -40,6 +40,36 @@ import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import JointState
 from gazebo_msgs.msg import LinkStates
+from sensor_msgs.msg import Imu
+
+def imu(data):
+	rospy.loginfo("\n linear_acceleration: \n")
+	rospy.loginfo("\n %s \n",data.linear_acceleration)
+	longueur=len(str(data.linear_acceleration))
+	compte=0
+	x,y,z="","",""
+	stop=False
+	while stop==False:
+		if str(data.linear_acceleration)[compte]=="y":
+			stop=True
+		elif str(data.linear_acceleration)[compte]!="x" and str(data.linear_acceleration)[compte]!=":":
+			x=x+str(data.linear_acceleration)[compte]
+		compte=compte+1
+	stop=False
+	
+	while stop==False:
+		if str(data.linear_acceleration)[compte]=="z":
+			stop=True
+		elif str(data.linear_acceleration)[compte]!="y" and str(data.linear_acceleration)[compte]!=":":
+			y=y+str(data.linear_acceleration)[compte]
+		compte=compte+1
+	
+	while compte<longueur:
+		if str(data.linear_acceleration)[compte]!="z" and str(data.linear_acceleration)[compte]!=":":
+			z=z+str(data.linear_acceleration)[compte]
+		compte=compte+1
+	rospy.loginfo(x+y+z)
+	rospy.sleep(1) 
 
 def get_link(data):
     rospy.loginfo("\n \n \n \n \n \n \n \n %s \n",data.name)
@@ -51,6 +81,8 @@ def get_link(data):
 def get_joint(data):
 	rospy.loginfo("\n %s \n",data.name)
 	rospy.loginfo("%s \n",data.position)
+	data_float=[float(data.position[0]),float(data.position[1]),float(data.position[2]),float(data.position[3]),float(data.position[4]),float(data.position[5])]
+	rospy.loginfo("\n %f %f %f %f %f %f ", data_float[0], data_float[1], data_float[2], data_float[3], data_float[4], data_float[5])
 	rospy.sleep(1) 
 
 
@@ -65,6 +97,7 @@ def listener():
     rospy.Subscriber('/gazebo/link_states', LinkStates, get_link)
     rospy.Subscriber('/joint_states', JointState, get_joint)
     # spin() simply keeps python from exiting until this node is stopped
+    rospy.Subscriber('/imu', Imu, imu)  
     rospy.spin()
 
 if __name__ == '__main__':

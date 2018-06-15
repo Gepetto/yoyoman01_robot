@@ -20,6 +20,14 @@
 </joint-->
 
 
+<!-- virtual link with a virtual joint to make the root link -->
+  <link name="virtual_link"/>
+  <joint name="virtual_joint" type="fixed">
+    <parent link="virtual_link"/>
+    <child link="base_link"/>
+  </joint>
+
+
 
   <link name="base_link">
     <inertial>
@@ -40,7 +48,6 @@
       </geometry>
     <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
     </collision>
-  <velocity rpy="0 0 0" xyz="10 10 10000000000000000000000000000000000000000000000000000000000"/>
   </link>
 
 
@@ -401,6 +408,7 @@
     <selfCollide>true</selfCollide>
 
 <!-- IMU-->
+
       <plugin name="imu_plugin" filename="libhector_gazebo_ros_imu.so">
             <alwaysOn>true</alwaysOn>
             <updateRate>1000</updateRate>
@@ -424,6 +432,29 @@
             <gaussianNoise>0.0</gaussianNoise>
         </plugin>
 
+  </gazebo>
+
+  <gazebo reference="imu_link">
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    </plugin>
+    <selfCollide>true</selfCollide>
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>__default_topic__</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>imu</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>1000.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
   </gazebo>
 
 </robot>

@@ -4,6 +4,7 @@
  <node name="pause"  pkg="yoyoman01_traject" type="pause_gazebo.py" output="screen"/>  
  <node name="bringup_yoyoman01" pkg="yoyoman01_traject" type="bringup_yoyoman01.py" output="screen"/>
  <node name="bringup_controllers" pkg="yoyoman01_traject" type="bringup_controller.py" output="screen"/>
+ <!--node name="imu" pkg="yoyoman01_traject" type="bringup_imu.py" output="screen"/-->
  <node name="bringup_play_motion" pkg="yoyoman01_traject" type="bringup_play_motion.py" output="screen"/>
  <!--node name="set_state" pkg="yoyoman01_traject" type="set_state" output="screen"/-->
  <node name="movement" pkg="yoyoman01_traject" type="movement.py" output="screen"/>
