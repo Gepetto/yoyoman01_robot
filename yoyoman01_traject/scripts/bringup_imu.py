@@ -5,7 +5,7 @@ import roslaunch
 
 if __name__ == "__main__":
   rospy.sleep(3)
-  #launch controller
+  #launch imu
   rospy.init_node('tester', anonymous=True)
   uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
   roslaunch.configure_logging(uuid)

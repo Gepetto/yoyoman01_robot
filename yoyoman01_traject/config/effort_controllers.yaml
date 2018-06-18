@@ -1,0 +1,28 @@
+
+ joint_state_controller:
+   type: joint_state_controller/JointStateController
+   publish_rate: 50
+
+ full_body_controller:
+   type: "effort_controllers/JointGroupEffortController"
+   joints:
+     - Rarm
+     - Larm
+     - RHip
+     - LHip
+     - Head
+     - Neck
+
+   gains:
+     Rarm: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     Larm: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     RHip: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     LHip: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     Head: {p: 150,  d: 1, i: 1, i_clamp: 1}
+     Neck: {p: 150,  d: 1, i: 1, i_clamp: 1}
+
+
+
+   state_publish_rate:  25            # Override default
+   action_monitor_rate: 30            # Override default
+   
