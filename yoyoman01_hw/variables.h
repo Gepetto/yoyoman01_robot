@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-//Comment to desactive
-#define ACTIV_CODEURS // Direct read of the 4 encremental endoders using STM32 timers
 
 ////dans .c: #include "variables.h"
 //------------------------IMU---------------------
@@ -35,11 +33,7 @@
 #define BAUD_XM 1000000
 #define BAUD_ODRIVE 115200
 //------------------SPI --------------------
-#ifdef ACTIV_CODEURS
 #define SIZE_BUFFER 44
-#else
-#define SIZE_BUFFER 30
-#endif
 //------------------Definition des Pins --------------------
 #define PIN_DATA_CTRL_AX PG2
 #define PIN_DATA_CTRL_XM PG3
@@ -149,13 +143,12 @@ struct TrameRead
 
 } rbuffer;
 
-//------------------Flags--------------------
-#define NO_FLAG 0
-#define FLAG_OD0 1
-#define FLAG_OD1 2
-#define FLAG_AX1 4
-#define FLAG_AX2 8
-#define FLAG_XM1 16
-#define FLAG_XM2 32
+//------------------Flags-------------------- 
+#define NO_FLAG 0 
+#define FLAG_OD 1 
+#define FLAG_AX 2
+#define FLAG_XM 4
+#define FLAG_IMU 8
+#define FLAG_CODEURS 16
 
 #endif
