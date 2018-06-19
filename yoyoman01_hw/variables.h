@@ -90,6 +90,7 @@ struct TrameWrite
   uint16_t wXm2_pos;
 
   uint16_t wspi_test;
+  uint16_t w_flag;
 
   //Inutilisé
   uint16_t a;
@@ -102,8 +103,6 @@ struct TrameWrite
   uint16_t h;
   uint16_t i;
   uint16_t k;
-  uint16_t l;
-
   int16_t m;
   int16_t n;
   int16_t o;
@@ -140,14 +139,23 @@ struct TrameRead
   //  int16_t rYmag;
   //  int16_t rZmag;
   //Codeurs
-  int16_t rCodRMot;
-  int16_t rCodRHip;
-  int16_t rCodLMot;
-  int16_t rCodLHip;
+  int16_t rCodHip0;
+  int16_t rCodHip1;
+  int16_t rCodMot0;
+  int16_t rCodMot1;
 
 //attention la deniere variable peut ne pas être stable
 
 
 } rbuffer;
+
+//------------------Flags--------------------
+#define NO_FLAG 0
+#define FLAG_OD0 1
+#define FLAG_OD1 2
+#define FLAG_AX1 4
+#define FLAG_AX2 8
+#define FLAG_XM1 16
+#define FLAG_XM2 32
 
 #endif
