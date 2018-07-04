@@ -1,4 +1,3 @@
-
 /*Sources : 
 * https://github.com/jhu-lcsr-attic/barrett_control/blob/libbarrett/barrett_hw/src/wam_server.cpp
 * http://www.ensta-bretagne.fr/lemezo/files/teaching/ROS/TP1.pdf
@@ -52,6 +51,7 @@
 
 //Intermediate variables for cmd
 int cAx1_pos, cAx2_pos, cXm1_pos, cXm2_pos, cOd0_pos, cOd1_pos;
+int currentFlag;
 
 //Pointer for I/O SPI buffer
 struct TrameRead *ptr_rbuffer = &rbuffer;
@@ -85,6 +85,8 @@ class Yoyoman01Class : public hardware_interface::RobotHW
     int UpdateImu();
     int UpdateCmd();
     int UpdateSensor();
+    int InitMotorsXM();
+    int InitMotorsAX();
 
     //~ bool SPI_check_connection();
 
@@ -163,8 +165,12 @@ int Yoyoman01Class::ReadWrite()
     /* SPI VERIF */
     SPI_check_connection();
 
-    ptr_wbuffer->w_flag = (FLAG_OD | FLAG_AX | FLAG_XM | FLAG_IMU | FLAG_CODEURS);
+    ptr_wbuffer->w_flag = currentFlag; //Update flag before transmit
 
+    while (currentFlag == NO_FLAG)
+    {
+        ROS_WARN("Current flag : NO_FLAG"); // All desactivated
+    }
     /* SPI TRANSFER */
     mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //TX,RX,size
 }
@@ -231,13 +237,17 @@ void Yoyoman01Class::SPI_check_connection()
 
     if (wbuffer.wspi_test != rbuffer.rspi_test) //Corrupted data
     {
+        ROS_INFO("Connecting to STM32..."); // Au premier démarrage un reset du STm32 est parfois necessaire
+        ptr_wbuffer->w_flag = (NO_FLAG);    // All desactivated
+
         while (wbuffer.wspi_test != rbuffer.rspi_test)
         {
-            ptr_wbuffer->w_flag = (NO_FLAG);                                                         // Nothing controlled
             mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //S/R until goods values
             ROS_ERROR("SPI connection FAULT *Maybe Reset stm32* %d ", rbuffer.rspi_test);            // Au premier démarrage un reset du STm32 est parfois necessaire
             usleep(100000);                                                                          //wait 0.1s
         }
+        ROS_INFO("SPI Ready");
+        ROS_INFO("-----------------------------------------");
     }
     else //OK Sending == receiving
     {
@@ -269,7 +279,7 @@ float ph2 = 0;
 /* get cmd from ROS */
 int Yoyoman01Class::UpdateCmd()
 {
-    cmd[3] = (0.2 * sin(ph2));
+    cmd[3] = 0; //(0.2 * sin(ph2));
     cmd[4] = 0;
     cmd[5] = (0.6 * sin(ph1));
     cmd[6] = (0.6 * sin(ph1));
@@ -331,6 +341,80 @@ int Yoyoman01Class::UpdateSensor()
     pos[6] = ptr_rbuffer->rCodHip1;
 }
 
+int Yoyoman01Class::InitMotorsXM()
+{
+    /*Sequence inititialisation moteurs 
+    Les dynamixels ne font pas de tours complets, il faut les initialiser en position médiane.
+    Il y a risque de casse si le moteur cherche à atteindre une position en faisant un tour complet.
+    - Vérifier que la postion du dynamixel est comprise entre les bornes limites 
+    - Si la condition est vérifiée alors la Position initiale est envoyée (2048 pour XM et 512 pour AX) */
+
+    currentFlag = (FLAG_RXM); // Read only -> /!\ Include a delay /!\ 
+    ReadWrite();
+    usleep(50000);
+
+    /* Check the limits for XM */
+    ROS_INFO("Check XM limits");
+    while (rbuffer.rXm1_pos < LIM_INF_XM || rbuffer.rXm1_pos > LIM_SUP_XM || rbuffer.rXm2_pos < LIM_INF_XM || rbuffer.rXm2_pos > LIM_SUP_XM) // Wait until correct limits
+    {
+        ReadWrite();
+        ROS_WARN("Impossible to initialize Xm : position out of range");
+        ROS_WARN("Manually go to position between %d and %d", LIM_INF_XM, LIM_SUP_XM);
+        usleep(50000);
+        ROS_INFO(" XM1 %d | XM2 %d ", rbuffer.rXm1_pos, rbuffer.rXm2_pos); //Current position
+    }
+    ROS_INFO("Limits : OK");
+    sleep(1);
+    ROS_INFO("Sending commands for arms...");
+    sleep(1);
+    currentFlag = (FLAG_RXM | FLAG_TORQUEXM | FLAG_WXM); //Lecture,ecriture,autorisation mouvement
+    ptr_wbuffer->wXm1_pos = 2048;                        //180°
+    ptr_wbuffer->wXm2_pos = 2048;                        //180°
+    ReadWrite();                                         // Send new position
+    sleep(1);
+    currentFlag = (NO_FLAG); //Reset FLAG
+    ROS_INFO("XM ready");
+    ROS_INFO("-----------------------------------------");
+    sleep(1);
+}
+
+int Yoyoman01Class::InitMotorsAX()
+{
+    /*Sequence inititialisation moteurs 
+    Les dynamixels ne font pas de tours complets, il faut les initialiser en position médiane.
+    Il y a risque de casse si le moteur cherche à atteindre une position en faisant un tour complet.
+    - Vérifier que la postion du dynamixel est comprise entre les bornes limites 
+    - Si la condition est vérifiée alors la Position initiale est envoyée (2048 pour XM et 512 pour AX) */
+
+    currentFlag = (FLAG_RAX); //Lecture seule
+    ReadWrite();
+    usleep(50000);
+
+    /* Check the limits for XM */
+    ROS_INFO("Check AX limits");
+    while (rbuffer.rAx1_pos < LIM_INF_AX || rbuffer.rAx1_pos > LIM_SUP_AX || rbuffer.rAx2_pos < LIM_INF_AX || rbuffer.rAx2_pos > LIM_SUP_AX) // for 15° // Wait until correct limits
+    {
+        ReadWrite();
+        ROS_WARN("Impossible to initialize AX : position out of range");
+        ROS_WARN("Manually go to position between %d and %d", LIM_INF_AX, LIM_SUP_AX);
+        usleep(50000);
+        ROS_INFO(" AX1 %d | AX2 %d ", rbuffer.rAx1_pos, rbuffer.rAx2_pos); //Current position
+    }
+    ROS_INFO("Limits : OK");
+    sleep(1);
+    ROS_INFO("Sending commands for head and neck...");
+    sleep(1);
+    currentFlag = (FLAG_WAX);    //ecriture
+    ptr_wbuffer->wAx1_pos = 512; //150°
+    ptr_wbuffer->wAx2_pos = 512; //150°
+    ReadWrite();                 // Send new position
+    sleep(1);
+    currentFlag = (NO_FLAG); //Reset FLAG
+    ROS_INFO("AX ready");
+    ROS_INFO("-----------------------------------------");
+    sleep(1);
+}
+
 struct arg_struct
 {
     bool rosOk;
@@ -345,10 +429,11 @@ void *RTloop(void *argument)
     {
         //ROS_INFO("----while hwloop----\n");
         pthread_mutex_lock(&mutx); /* On verrouille les variables pour ce thread */
-        yoyoman01.ReadWrite();
-        yoyoman01.UpdateImu();
+        currentFlag = NO_FLAG;     // write Flag Explicitly before next sending
+        yoyoman01.ReadWrite();     //Receiving data only one time
+        yoyoman01.UpdateImu();     //Processing incoming data
+        yoyoman01.UpdateSensor();  //Processing incoming data
         yoyoman01.UpdateCmd();
-        yoyoman01.UpdateSensor();
         pthread_mutex_unlock(&mutx); /* On deverrouille les variables */
         /// Pause
         usleep(10000); //100HZ
@@ -407,9 +492,13 @@ int main(int argc, char *argv[])
     ros::NodeHandle yoyoman01_nh;
 
     /*---------------- Validation fonctionnement SPI ------------------ */
-    yoyoman01.SpiInit();              //Initialisation matérielle
+    currentFlag = NO_FLAG;            // All disabled
+    yoyoman01.SpiInit();              //Initialisation SPI
     yoyoman01.SPI_check_connection(); //Verifivation envoie/reception
 
+    /*---------------- Initialisation moteurs ------------------ */
+    yoyoman01.InitMotorsXM();
+    yoyoman01.InitMotorsAX();
     /*---------------- Gestion des threads ------------------ */
     /* 
     Thread "number 1" : Main  
@@ -417,7 +506,7 @@ int main(int argc, char *argv[])
     Thread "number 3" : RTloop
     Thread "number 4" : spinner
     */
-    ROS_INFO("Creation thread");
+
     args.rosOk = (ros::ok);
 
     pthread_t thread1;

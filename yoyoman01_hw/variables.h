@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-
 ////dans .c: #include "variables.h"
 //------------------------IMU---------------------
 //Adresses registres
@@ -73,6 +72,10 @@ uint8_t DIAGNOSTIC_STATUS;
 
 struct TrameWrite
 { // Variables "write" to send over SPI from the master
+  //Outils
+  uint16_t wspi_test;
+  uint16_t w_flag;
+
   //Odrive
   int16_t wOd0_pos;
   int16_t wOd1_pos;
@@ -82,9 +85,6 @@ struct TrameWrite
   //XM
   uint16_t wXm1_pos;
   uint16_t wXm2_pos;
-
-  uint16_t wspi_test;
-  uint16_t w_flag;
 
   //Inutilisé
   uint16_t a;
@@ -105,6 +105,9 @@ struct TrameWrite
 
 struct TrameRead
 { // Variables "read" to send over SPI from the slave
+  //Outils
+  uint16_t rspi_test;
+
   //Odrive
   uint16_t rOd0_pos; //read Odrive Right
   uint16_t rOd1_pos;
@@ -121,34 +124,25 @@ struct TrameRead
   int16_t acc[3];
   int16_t mag[3];
 
-  uint16_t rspi_test;
-
-  //  int16_t rXrate;
-  //  int16_t rYrate;
-  //  int16_t rZrate;
-  //  int16_t rXacc;
-  //  int16_t rYacc;
-  //  int16_t rZacc;
-  //  int16_t rXmag;
-  //  int16_t rYmag;
-  //  int16_t rZmag;
   //Codeurs
   int16_t rCodHip0;
   int16_t rCodHip1;
   int16_t rCodMot0;
   int16_t rCodMot1;
 
-//attention la deniere variable peut ne pas être stable
-
+  //attention la deniere variable peut ne pas être stable
 
 } rbuffer;
 
-//------------------Flags-------------------- 
-#define NO_FLAG 0 
-#define FLAG_OD 1 
-#define FLAG_AX 2
-#define FLAG_XM 4
-#define FLAG_IMU 8
-#define FLAG_CODEURS 16
+//------------------Flags--------------------
+#define NO_FLAG 0
+#define FLAG_OD 1
+#define FLAG_RAX 2
+#define FLAG_WAX 4
+#define FLAG_RXM 8       // read data
+#define FLAG_WXM 16      //write data
+#define FLAG_TORQUEXM 32 // enable torque
+#define FLAG_IMU 64
+#define FLAG_CODEURS 128
 
 #endif
