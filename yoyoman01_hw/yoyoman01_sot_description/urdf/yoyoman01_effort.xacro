@@ -1,0 +1,517 @@
+<?xml version="1.0" ?>
+<!-- Marcheur passif -->
+<!-- This file comes from Aldebaran romeo.urdf file with slight modifications:               -->
+<!--             - rename joint_base by waist (joint base name in sot is already joint_base) -->
+<!--             - waist joint goes from base_link to body (and not base_link)                   -->
+<!--             - inverse trunkYaw joint direction (now from body to base_link)                 -->
+<!-- Aldebaran file comes from                                                               --> 
+
+<robot name="robot"  xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+   <material name="blue">
+      <color rgba="0 0 0.8 1"/>
+   </material>
+
+   <link name="world"/>
+
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+</joint>
+
+
+<!-- virtual link with a virtual joint to make the root link -->
+  <!--link name="virtual_link"/>
+  <joint name="virtual_joint" type="fixed">
+    <parent link="virtual_link"/>
+    <child link="base_link"/>
+  </joint-->
+
+
+
+  <link name="base_link">
+    <inertial>
+      <mass value="1.635"/>
+      <inertia ixx="86e-03" ixy="-39.84e-6" ixz="3.991e-4" iyy="83e-3" iyz="-38.29e-6" izz="4e-3"/>
+      <origin rpy="0 0 0" xyz="0 0 0.17346"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/BUSTE.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
+    <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/BUSTE.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+
+
+
+  <joint name="Neck" type="revolute">
+    <parent link="base_link"/>
+    <child link="NeckLink"/>
+    <origin rpy="0 0 0" xyz="0 0 0.675"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="1.5" lower="-0.5" upper="0.5" velocity="6.175333333"/>
+  </joint>
+  <link name="NeckLink">
+    <inertial>
+      <mass value="0.061"/>
+      <inertia ixx="2.95e-5" ixy="-7.67e-9" ixz="-3.61e-9" iyy="2.53e-5" iyz="-3.05e-6" izz="1.09e-5"/>
+      <origin rpy="0 0 0" xyz="0 0 0.03"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/COU.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 1.57075" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/COU.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 1.57075" xyz="0 0 0"/>
+    </collision>
+  </link>
+  
+ <joint name="Head" type="revolute">
+    <parent link="NeckLink"/>
+    <child link="HeadLink"/>
+    <origin rpy="0 0 0" xyz="0 0 0.064502"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="1.5" lower="-0.5" upper="0.5" velocity="6.175333333"/>
+  </joint>
+  <link name="HeadLink">
+    <inertial>
+      <mass value="0.340"/>
+      <inertia ixx="2e-3" ixy="-129.7e-9" ixz="5.391e-5" iyy="3e-3" iyz="-267.9e-9" izz="1e-3"/>
+      <origin rpy="0 0 0" xyz="0 0 0.143385"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/TETE.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 1.57075 " xyz="0 0 0"/>
+    <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/TETE.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 1.57075 " xyz="0 0 0"/>
+    </collision>
+  </link>
+  
+
+  
+<joint name="Rarm" type="revolute">
+    <parent link="base_link"/>
+    <child link="RArmLink"/>
+    <origin rpy="0 0 0" xyz="0 -0.155 0.589901 "/>
+    <axis xyz="0 1 0"/>
+    <limit effort="4.1" lower="-3" upper="3" velocity="4.814666667"/>
+  </joint>
+<link name="RArmLink">
+    <inertial>
+      <mass value="0.172"/>
+      <inertia ixx="3e-3" ixy="-2.011e-20" ixz="-3.61e-9" iyy="3e-3" iyz="3.05e-6" izz="2.475e-5"/>
+      <origin rpy="0 0 0 " xyz="0 0 -0.10032"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/BRAS.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/BRAS.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
+    </collision>
+  </link>
+  
+<joint name="Larm" type="revolute">
+    <parent link="base_link"/>
+    <child link="LArmLink"/>
+    <origin rpy="0 0 0" xyz="0 0.155 0.589901 "/>
+    <axis xyz="0 1 0"/>
+    <limit effort="4.1" lower="-3" upper="3" velocity="4.814666667"/>
+  </joint>
+<link name="LArmLink">
+    <inertial>
+      <mass value="0.172"/>
+      <inertia ixx="3e-3" ixy="2.011e-20" ixz="-3.61e-9" iyy="3e-3" iyz="-3.05e-6" izz="2.475e-5"/>
+      <origin rpy="0 0 0 " xyz="0 0 -0.10032"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/BRAS.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 1.57075" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/BRAS.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 1.57075" xyz="0 0 0"/>
+    </collision>
+  </link>
+  
+  <joint name="RHip" type="revolute">
+    <parent link="base_link"/>
+    <child link="RHipLink"/>
+    <origin rpy="0 0 0" xyz="0 -0.09 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="6.672" lower="-3" upper="3" velocity="10"/>
+  </joint>
+  <link name="RHipLink">
+    <inertial>
+      <mass value="0.816"/>
+      <inertia ixx="0.001" ixy="1.921e-4" ixz="-0.0001443" iyy="0.002" iyz="1.291e-4" izz="0.002"/>
+      <origin rpy="0 0 0" xyz="0.0506 -0.0137 0.0101"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/HANCHE_D.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 3.14 1.57075" xyz="0 0 0"/> 
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/HANCHE_D.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 3.14 1.57075" xyz="0 0 0"/>
+    </collision>
+  </link>
+  
+  <joint name="LHip" type="revolute">
+    <parent link="base_link"/>
+    <child link="LHipLink"/>
+    <origin rpy="0 0 0" xyz="0 0.09 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="6.672" lower="-3" upper="3" velocity="10"/>
+  </joint>
+  <link name="LHipLink">
+    <inertial>
+      <mass value="0.816"/>
+      <inertia ixx="0.001" ixy="-1.921e-4" ixz="-0.0001443" iyy="0.002" iyz="-1.291e-4" izz="0.002"/>
+      <origin rpy="0 0 0" xyz="0.0506 0.0137 0.0101"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/HANCHE_G.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 1.57075" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/HANCHE_G.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 1.57075" xyz="0 0 0"/>
+    </collision>
+  </link>
+  
+  <joint name="RKnee" type="fixed">
+    <parent link="RHipLink"/>
+    <child link="RKneeLink"/>
+    <origin rpy="0 0 0" xyz="-0.021 -0.068 -0.01"/>
+    <axis xyz="0 0 0"/>
+    <limit effort="50" lower="0" upper="0.04" velocity="1"/>
+  </joint>
+  <link name="RKneeLink">
+    <inertial>
+      <mass value="0.839"/>
+      <inertia ixx="80e-3" ixy="17.42e-6" ixz="-154.3e-6" iyy="80e-3" iyz="-3e-3" izz="2e-3"/>
+      <origin rpy="0 0 0" xyz="0.01817 -0.01317 -0.557"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/JAMBE_G.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 3.14" xyz="0 0 0"/>
+    <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/JAMBE_G.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 3.14" xyz="0 0 0"/>
+    </collision>
+  </link> 
+  
+  <joint name="LKnee" type="fixed">
+    <parent link="LHipLink"/>
+    <child link="LKneeLink"/>
+    <origin rpy="0 0 0" xyz="-0.021 0.068 -0.01"/>
+    <axis xyz="0 0 0"/>
+    <limit effort="50" lower="0" upper="0.04" velocity="1"/>
+  </joint>
+  <link name="LKneeLink">
+    <inertial>
+      <mass value="0.839"/>
+      <inertia ixx="80e-3" ixy="-17.42e-6" ixz="-154.3e-6" iyy="80e-3" iyz="3e-3" izz="2e-3"/>
+      <origin rpy="0 0 0" xyz="0.01817 0.01317 -0.557"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/JAMBE_D.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 3.14" xyz="0 0 0"/>
+    <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://yoyoman01_description/meshes/JAMBE_D.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    <origin rpy="0 0 3.14" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+
+
+<!-- **********Virtual points on the top of the foots ********** -->
+
+  <joint name="RFoot" type="fixed">
+    <parent link="RKneeLink"/>
+    <child link="RFootLink"/>
+    <origin rpy="0 0 0" xyz="0.0187 0 -0.7775"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+    <link name="RFootLink">
+  </link>
+  
+  <joint name="LFoot" type="fixed">
+    <parent link="LKneeLink"/>
+    <child link="LFootLink"/>
+    <origin rpy="0 0 0" xyz="0.0187 0 -0.7775"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+    <link name="LFootLink">
+  </link>
+
+<!-- IMU -->
+<link name="imu_link">
+  <inertial>
+    <mass value="0.00"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <inertia ixx="0.000" ixy="0" ixz="0" iyy="0.000" iyz="0" izz="0.000"/>
+  </inertial>
+
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <sphere radius="0.01"/>
+    </geometry>
+  </visual>
+
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <sphere radius="0.01"/>
+    </geometry>
+  </collision>
+</link>
+
+<!-- IMU Joint -->
+  <joint name="imu_joint" type="fixed">
+    <axis xyz="0 0 0"/> <!-- 0 1 0 -->
+    <origin xyz="0 0 0.15" rpy="0 0 0"/>
+    <parent link="HeadLink"/>
+    <child link="imu_link"/>
+  </joint>
+
+
+
+<!--
+**********Transmissions**********
+-->
+
+
+  <transmission name="tranHead">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="Head">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motorHead">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tranNeck">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="Neck">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motorNeck">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tranRarm">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="Rarm">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motorRarm">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tranLarm">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="Larm">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motorLarm">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tranRHip">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="RHip">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motorRHip">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tranLHip">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="LHip">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motorLHip">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+
+<gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <!--robotNamespace>/yoyoman01</robotNamespace-->
+
+       <ns/>
+      <robotSimType>pal_hardware_gazebo/PalHardwareGazebo</robotSimType>
+      <robotNamespace/>
+      <controlPeriod>0.001</controlPeriod>
+    </plugin>
+    <selfCollide>true</selfCollide>
+    <gravity>true</gravity>
+
+<!-- IMU-->
+
+
+
+<!--
+      <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>10</updateRate>
+            <bodyName>imu_link</bodyName>
+            <topicName>/imu_ros</topicName>
+            <serviceName>/imu/calibrate</serviceName>
+            <accelOffset>0.0 0.0 0.0</accelOffset>
+            <accelDrift>0.0 0.0 0.0</accelDrift>
+            <accelDriftFrequency>0.0 0.0 0.0</accelDriftFrequency>
+            <accelGaussianNoise>0.0 0.0 0.0</accelGaussianNoise>
+            <rateOffset>0.0 0.0 0.0</rateOffset>
+            <rateDrift>0.0 0.0 0.0</rateDrift>
+            <rateDriftFrequency>0.0 0.0 0.0</rateDriftFrequency>
+            <rateGaussianNoise>0.0 0.0 0.0</rateGaussianNoise>
+            <headingOffset>0.0</headingOffset>
+            <headingDrift>0.0</headingDrift>
+            <headingDriftFrequency>0.0</headingDriftFrequency>
+            <headingGaussianNoise>0.0</headingGaussianNoise>
+            <rpyOffset>0.0 0.0 0.0</rpyOffset>
+            <xyzOffset>0.0 0.0 0.0</xyzOffset>
+            <gaussianNoise>0.0</gaussianNoise>
+        </plugin>
+-->
+
+    <plugin name="imu_link_controller" filename="libhector_gazebo_ros_imu.so">
+      <updateRate>100.0</updateRate>
+      <bodyName>imu_link</bodyName>
+      <topicName>COMAN/raw_imu</topicName>
+      <rpyOffsets>0 0 0</rpyOffsets> 
+      <gaussianNoise>0</gaussianNoise>  
+      <accelDrift>0.5 0.5 0.5</accelDrift>
+      <accelGaussianNoise>0.35 0.35 0.3</accelGaussianNoise>
+      <rateDrift>0.1 0.1 0.1</rateDrift>
+      <rateGaussianNoise>0.05 0.05 0.015</rateGaussianNoise>
+      <headingDrift>0.1</headingDrift>
+      <headingGaussianNoise>0.05</headingGaussianNoise>
+    </plugin>
+
+
+  </gazebo>
+
+
+
+  <gazebo reference="imu_link">
+
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>1000.0</update_rate>
+      <visualize>true</visualize>
+      <topic>__default_topic__</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>imu_gazebo</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>1000.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+
+		<!-- Imu definition required for DLS hardware interface of ros control -->
+		<gazebo reference="imu_link">
+			<sensor name="imu_sensor" type="imu">
+				<always_on>1</always_on>
+				<update_rate>10</update_rate>
+				<imu>
+					<noise>
+						<type>gaussian</type>
+						<rate>
+							<mean>0</mean>
+							<stddev>0</stddev>
+							<bias_mean>0</bias_mean>
+							<bias_stddev>0</bias_stddev>
+						</rate>
+						<accel>
+							<mean>0</mean>
+							<stddev>0</stddev>
+							<bias_mean>0</bias_mean>
+							<bias_stddev>0</bias_stddev>
+						</accel>
+					</noise>
+				</imu>
+			</sensor>
+</gazebo>
+
+
+</robot>
+
+
+
+
+
