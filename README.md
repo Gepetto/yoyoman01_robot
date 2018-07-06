@@ -42,9 +42,13 @@ First dowload sot-romeo from stack-of-tasks, then remove the src file in it and 
 Secondly put yoyoman01_sot_description and yoyoman_metapkg_ros_control_sot in your catkin workspace before doing the catkin_make command.
 
 You will need to install the following pkg:
+
 ros-kinetic-hector-gazebo
+
 robotpkg-pal-gazebo-plugins
+
 robotpkg-pal-hardware-gazebo
+
 robotpkg-pal-hardware-interfaces
 
 and may be others that should be asked to you in the shell if they're missing.
@@ -58,8 +62,10 @@ http://robotpkg.openrobots.org/robotpkg-wip.html (you will have to download wip 
 In the roscontrol-sot package you will have to first download it the go in your work. directory created by the install to find sot-controllers.cpp to remove the forcetorquesensor and actuatortemperatursensor initialisation.
 
 Then to launch the sot controllers:
+
 in a first shell: roslaunch yoyoman01_sot_description yoyoman01_world.launch 
 (you can modified control_mode in this launch file)
+
 in a second shell: roslaunch roscontrol_sot_yoyoman sot_yoyoman_controller_gazebo.launch  (or sot_yoyoman_controller_gazebo_effort.launch if you modified it to an effort control)
 
 /!\ Effort control mode hasn't been test yet
