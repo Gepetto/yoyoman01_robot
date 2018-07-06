@@ -50,8 +50,11 @@ robotpkg-pal-hardware-interfaces
 and may be others that should be asked to you in the shell if they're missing.
 
 You also may have to do some changes in the robotpkg-roscontrol-sot that you should download with the robotpkg package: The advice to use it are on:
+
 http://robotpkg.openrobots.org/install.html
+
 http://robotpkg.openrobots.org/robotpkg-wip.html (you will have to download wip in it)
+
 In the roscontrol-sot package you will have to first download it the go in your work. directory created by the install to find sot-controllers.cpp to remove the forcetorquesensor and actuatortemperatursensor initialisation.
 
 Then to launch the sot controllers:
