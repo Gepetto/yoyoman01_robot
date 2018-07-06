@@ -1,4 +1,4 @@
-sot-romeo
+sot-yoyoman01
 ===========
 
 [![Build Status](https://travis-ci.org/stack-of-tasks/sot-romeo.png?branch=master)](https://travis-ci.org/stack-of-tasks/sot-romeo)
