@@ -1,0 +1,9 @@
+sot_controller:
+  libname: libsot-pyrene-controller.so
+  simulation_mode: gazebo
+  joint_names: [ Rarm, Larm, RHip, LHip, Head, Neck]
+  map_rc_to_sot_device: { motor-angles: motor-angles ,
+  joint-angles: joint-angles, velocities: velocities, forces: forces, currents: currents,
+  torques: torques, cmd-joints: control, cmd-effort: control, accelerometer_0: accelerometer_0, gyrometer_0: gyrometer_0 }
+  control_mode: EFFORT
+  dt: 0.001  

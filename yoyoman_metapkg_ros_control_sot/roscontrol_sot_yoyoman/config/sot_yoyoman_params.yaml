@@ -1,0 +1,25 @@
+sot_controller:
+  libname: libsot-yoyoman01-controller.so
+  joint_names: [Rarm, Larm, RHip, LHip, Head, Neck
+  ]
+  map_rc_to_sot_device: { motor-angles: motor-angles ,
+  joint-angles: joint-angles, velocities: velocities,
+  torques: torques, cmd-joints: control, cmd-effort: control }
+  position_control_init_pos:
+    - name: Rarm
+      des_pos: 0.0
+    - name: Larm
+      des_pos: 0.0
+    - name: RHip
+      des_pos: 0.0
+    - name: LHip
+      des_pos: 0.0
+    - name: Neck
+      des_pos: 0.0
+    - name: Head
+      des_pos: 0.0
+
+  control_mode: POSITION
+  dt: 0.001
+  jitter: 0.0004
+  

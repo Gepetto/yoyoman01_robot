@@ -1,0 +1,17 @@
+sot:
+  state_vector_map: [Rarm, Larm, RHip, LHip, Neck, Head]
+#  joint_state_parallel: { gripper_left_inner_double_joint: gripper_left_joint,
+#    gripper_left_fingertip_1_joint: -gripper_left_joint,
+#    gripper_left_fingertip_2_joint: -gripper_left_joint,
+#    gripper_left_motor_single_joint: -gripper_left_joint,
+#    gripper_left_inner_single_joint: -gripper_left_joint,
+#    gripper_left_fingertip_3_joint: -gripper_left_joint,
+#    gripper_right_inner_double_joint: gripper_right_joint,
+#    gripper_right_fingertip_1_joint: -gripper_right_joint,
+#    gripper_right_fingertip_2_joint: -gripper_right_joint,
+#    gripper_right_motor_single_joint: -gripper_right_joint,
+#    gripper_right_inner_single_joint: -gripper_right_joint,
+#    gripper_right_fingertip_3_joint: -gripper_right_joint}
+sot_controller:
+  joint_names: [ Rarm, Larm, RHip, LHip, Neck, Head  ]
+  dt: 0.001

@@ -1,0 +1,24 @@
+<package>
+  <name>yoyoman_metapkg_ros_control_sot</name>
+  <version>0.0.9</version>
+  <description>A set of packages that include sot-wrapper and talos sot params .</description>
+
+  <maintainer email="olivier.stasse@laas.fr">Olivier Stasse</maintainer>
+
+  <license>BSD</license>
+
+  <url type="repository">https://github.com/stack-of-tasks/yoyoman_metapkg_roscontrol_sot</url>
+
+  <author>Olivier Stasse</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>roscontrol_sot</run_depend>
+  <run_depend>roscontrol_sot_yoyoman</run_depend>
+  <run_depend>realtime_tools</run_depend>
+  <run_depend>control_toolbox</run_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>
