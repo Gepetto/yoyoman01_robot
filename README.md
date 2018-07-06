@@ -61,4 +61,4 @@ in a second shell: roslaunch roscontrol_sot_yoyoman sot_yoyoman_controller_gazeb
 
 /!\ Effort control mode hasn't been test yet
 
-/!\ /!\ /!\ You may have path problems, you cans abuse of export in your bashrc file /!\ /!\ /!\ 
+/!\ /!\ /!\ You may have path problems, you can abuse of export in your bashrc file /!\ /!\ /!\ 
