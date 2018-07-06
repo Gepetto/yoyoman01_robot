@@ -37,7 +37,7 @@ Stack of Tasks
 ================
 You will need "sot-yoyoman01", "yoyoman01_sot_description", "yoyoman_metapkg_ros_control_sot"
 
-First dowload sot-roméo from stack-of-tasks, then remove the src file in it and put the sot-yoyoman01'src file. Follow the readme instruction of the package to install it on your cpu.
+First dowload sot-romeo from stack-of-tasks, then remove the src file in it and put the sot-yoyoman01'src file. Follow the readme instruction of the package to install it on your cpu.
 
 Secondly put yoyoman01_sot_description and yoyoman_metapkg_ros_control_sot in your catkin workspace before doing the catkin_make command.
 
