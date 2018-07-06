@@ -17,7 +17,73 @@
       <link name="RHipLink" />
       <link name="RArmLink" />
       <joint name="fixed" />
+      <joint name="RKnee" />
+      <joint name="LKnee" />
+      <joint name="RFoot" />
+      <joint name="LFoot" />
+      <link name="base_link" />
+      <link name="RKneeLink" />
+      <link name="LKneeLink" />
+      <link name="RFootLink" />
+      <link name="LFootLink" />
+
    </group>
+
+   <disable_collisions link1='Rarm' link2='Larm' reason='Never' />
+   <disable_collisions link1='Rarm' link2='RHip' reason='Never' />
+   <disable_collisions link1='Rarm' link2='LHip' reason='Never' />
+   <disable_collisions link1='Rarm' link2='Head' reason='Never' />
+   <disable_collisions link1='Rarm' link2='Neck' reason='Never' />
+   <disable_collisions link1='Rarm' link2='RKnee' reason='Never' />
+   <disable_collisions link1='Rarm' link2='LKnee' reason='Never' />
+   <disable_collisions link1='Rarm' link2='RFoot' reason='Never' />
+   <disable_collisions link1='Rarm' link2='LFoot' reason='Never' />
+   <disable_collisions link1='Rarm' link2='fixed' reason='Never' />
+   <disable_collisions link1='Larm' link2='RHip' reason='Never' />
+   <disable_collisions link1='Larm' link2='LHip' reason='Never' />
+   <disable_collisions link1='Larm' link2='Head' reason='Never' />
+   <disable_collisions link1='Larm' link2='Neck' reason='Never' />
+   <disable_collisions link1='Larm' link2='RKnee' reason='Never' />
+   <disable_collisions link1='Larm' link2='LKnee' reason='Never' />
+   <disable_collisions link1='Larm' link2='RFoot' reason='Never' />
+   <disable_collisions link1='Larm' link2='LFoot' reason='Never' />
+   <disable_collisions link1='Larm' link2='fixed' reason='Never' />
+   <disable_collisions link1='RHip' link2='LHip' reason='Never' />
+   <disable_collisions link1='RHip' link2='Head' reason='Never' />
+   <disable_collisions link1='RHip' link2='Neck' reason='Never' />
+   <disable_collisions link1='RHip' link2='RKnee' reason='Never' />
+   <disable_collisions link1='RHip' link2='LKnee' reason='Never' />
+   <disable_collisions link1='RHip' link2='RFoot' reason='Never' />
+   <disable_collisions link1='RHip' link2='LFoot' reason='Never' />
+   <disable_collisions link1='RHip' link2='fixed' reason='Never' />
+   <disable_collisions link1='LHip' link2='Head' reason='Never' />
+   <disable_collisions link1='LHip' link2='Neck' reason='Never' />
+   <disable_collisions link1='LHip' link2='RKnee' reason='Never' />
+   <disable_collisions link1='LHip' link2='LKnee' reason='Never' />
+   <disable_collisions link1='LHip' link2='RFoot' reason='Never' />
+   <disable_collisions link1='LHip' link2='LFoot' reason='Never' />
+   <disable_collisions link1='LHip' link2='fixed' reason='Never' />
+   <disable_collisions link1='Head' link2='Neck' reason='Never' />
+   <disable_collisions link1='Head' link2='RKnee' reason='Never' />
+   <disable_collisions link1='Head' link2='LKnee' reason='Never' />
+   <disable_collisions link1='Head' link2='RFoot' reason='Never' />
+   <disable_collisions link1='Head' link2='LFoot' reason='Never' />
+   <disable_collisions link1='Head' link2='fixed' reason='Never' />
+   <disable_collisions link1='Neck' link2='RKnee' reason='Never' />
+   <disable_collisions link1='Neck' link2='LKnee' reason='Never' />
+   <disable_collisions link1='Neck' link2='RFoot' reason='Never' />
+   <disable_collisions link1='Neck' link2='LFoot' reason='Never' />
+   <disable_collisions link1='Neck' link2='fixed' reason='Never' />
+   <disable_collisions link1='RKnee' link2='LKnee' reason='Never' />
+   <disable_collisions link1='RKnee' link2='RFoot' reason='Never' />
+   <disable_collisions link1='RKnee' link2='LFoot' reason='Never' />
+   <disable_collisions link1='RKnee' link2='fixed' reason='Never' />
+   <disable_collisions link1='LKnee' link2='RFoot' reason='Never' />
+   <disable_collisions link1='LKnee' link2='LFoot' reason='Never' />
+   <disable_collisions link1='LKnee' link2='fixed' reason='Never' />
+   <disable_collisions link1='RFoot' link2='LFoot' reason='Never' />
+   <disable_collisions link1='RFoot' link2='fixed' reason='Never' />
+   <disable_collisions link1='LFoot' link2='fixed' reason='Never' />
 
 
 </robot>

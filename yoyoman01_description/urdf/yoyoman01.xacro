@@ -11,13 +11,16 @@
    <material name="blue">
       <color rgba="0 0 0.8 1"/>
    </material>
-   <link name="world"/>
+
+   <!--link name="world"/>
 
   <joint name="fixed" type="fixed">
     <parent link="world"/>
     <child link="base_link"/>
-</joint>
-  
+</joint-->
+
+
+
   <link name="base_link">
     <inertial>
       <mass value="1.635"/>
@@ -38,13 +41,16 @@
     <origin rpy="0 0 -1.57075" xyz="0 0 0"/>
     </collision>
   </link>
-  
+
+
+
+
   <joint name="Neck" type="revolute">
     <parent link="base_link"/>
     <child link="NeckLink"/>
     <origin rpy="0 0 0" xyz="0 0 0.675"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0.5" lower="0" upper="0.5" velocity="1"/>
+    <limit effort="10.5" lower="-0.5" upper="0.5" velocity="1"/>
   </joint>
   <link name="NeckLink">
     <inertial>
@@ -71,7 +77,7 @@
     <child link="HeadLink"/>
     <origin rpy="0 0 0" xyz="0 0 0.064502"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0.5" lower="0" upper="0.5" velocity="1"/>
+    <limit effort="10.5" lower="-0.5" upper="0.5" velocity="1"/>
   </joint>
   <link name="HeadLink">
     <inertial>
@@ -101,7 +107,7 @@
     <child link="RArmLink"/>
     <origin rpy="0 0 0" xyz="0 -0.155 0.589901 "/>
     <axis xyz="0 1 0"/>
-    <limit effort="5" lower="0" upper="5" velocity="1"/>
+    <limit effort="50" lower="-3" upper="3" velocity="10"/>
   </joint>
 <link name="RArmLink">
     <inertial>
@@ -128,7 +134,7 @@
     <child link="LArmLink"/>
     <origin rpy="0 0 0" xyz="0 0.155 0.589901 "/>
     <axis xyz="0 1 0"/>
-    <limit effort="2.57" lower="-0.349066" upper="0.279253" velocity="1.9"/>
+    <limit effort="50" lower="-3" upper="3" velocity="10"/>
   </joint>
 <link name="LArmLink">
     <inertial>
@@ -155,7 +161,7 @@
     <child link="RHipLink"/>
     <origin rpy="0 0 0" xyz="0 -0.09 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="6" lower="0" upper="6" velocity="1"/>
+    <limit effort="600" lower="-3" upper="3" velocity="10"/>
   </joint>
   <link name="RHipLink">
     <inertial>
@@ -182,7 +188,7 @@
     <child link="LHipLink"/>
     <origin rpy="0 0 0" xyz="0 0.09 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="6" lower="0" upper="6" velocity="1"/>
+    <limit effort="600" lower="-3" upper="3" velocity="10"/>
   </joint>
   <link name="LHipLink">
     <inertial>
@@ -355,9 +361,10 @@
   </transmission>
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/yoyoman01</robotNamespace>
+      <!--robotNamespace>/yoyoman01</robotNamespace-->
     </plugin>
   </gazebo>
+
 </robot>
 
 

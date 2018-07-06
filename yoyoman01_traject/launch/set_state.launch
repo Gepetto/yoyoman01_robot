@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+ <node name="set_state" pkg="yoyoman01_traject" type="set_state" output="screen"/>
+</launch>

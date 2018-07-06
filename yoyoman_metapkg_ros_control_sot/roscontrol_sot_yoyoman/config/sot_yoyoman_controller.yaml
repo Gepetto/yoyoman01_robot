@@ -1,0 +1,25 @@
+sot_controller:
+  type: sot_controller/RCSotController
+  joints:
+    - Rarm
+    - Larm
+    - RHip
+    - LHip
+    - Head
+    - Neck
+
+
+
+
+  base_imu_sensor: base_imu
+  check_mode: False
+
+  actuators:
+    - Rarm_motor
+    - Larm_motor
+    - RHip_motor
+    - LHip_motor
+    - Head_motor
+    - Neck_motor
+
+
