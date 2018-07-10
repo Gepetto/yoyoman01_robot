@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+ <include file="$(find yoyoman01_traject)/launch/yoyoman01_control2.launch.launch"/>
+ <include file="$(find yoyoman01_traject)/launch/play_motion.launch.launch"/>
+ <node name="movement" pkg="yoyoman01_traject" type="movement_real.py" output="screen"/>
+</launch>
