@@ -1,11 +1,11 @@
 /*
- * Copyright 2011,
+ * Copyright 2018,
  *
- * Olivier Stasse
+ * Nicolas Testard
  *
  * LAAS, CNRS
  *
- * This file is part of RomeoController.
+ * This file is part of Yoyoman01Controller.
  *
  */
 
@@ -21,7 +21,7 @@
 
 #define DBGFILE "/tmp/sot-yoyoman-device.txt"
 
-#if 0
+#if 1
 #define RESETDEBUG5() { std::ofstream DebugFile;	\
     DebugFile.open(DBGFILE,std::ofstream::out);		\
     DebugFile.close();}
@@ -79,7 +79,10 @@ SoTYoyoman01Device::SoTYoyoman01Device(std::string RobotName):
   accelerometerSOUT_.setConstant (data);
   gyrometerSOUT_.setConstant (data);
   baseff_.resize(12); // a mediter
-  
+  dg::Vector dataForces(6); dataForces.setZero ();
+  for(int i=0;i<4;i++)
+    forcesSOUT[i]->setConstant(dataForces);
+
 
   using namespace dynamicgraph::command;
   std::string docstring;
@@ -182,62 +185,6 @@ void SoTYoyoman01Device::setSensors(map<string,dgsot::SensorValues> &SensorsIn)
   sotDEBUGIN(25) ;
   map<string,dgsot::SensorValues>::iterator it;
   int t = stateSOUT.getTime () + 1;
-/*
-  it = SensorsIn.find("forces");
-  if (it!=SensorsIn.end())
-    {
-
-      // Implements force recollection.
-      const vector<double>& forcesIn = it->second.getValues();
-      for(int i=0;i<4;++i)
-        {
-          for(int j=0;j<6;++j)
-            mlforces(j) = forcesIn[i*6+j];
-          forcesSOUT[i]->setConstant(mlforces);
-          forcesSOUT[i]->setTime (t);
-        }
-    }
-
-  it = SensorsIn.find("attitude");
-  if (it!=SensorsIn.end())
-    {
-      const vector<double>& attitude = it->second.getValues ();
-      for (unsigned int i = 0; i < 3; ++i)
-        for (unsigned int j = 0; j < 3; ++j)
-          pose (i, j) = attitude [i * 3 + j];
-      attitudeSOUT.setConstant (pose);
-      attitudeSOUT.setTime (t);
-    }
-*/
-  /*it = SensorsIn.find("joints");
-  if (it!=SensorsIn.end())
-    {
-      const vector<double>& anglesIn = it->second.getValues();
-      mlRobotState.resize (anglesIn.size () + 6);
-      for (unsigned i = 0; i < 6; ++i)
-        mlRobotState (i) = 0.;
-      updateRobotState(anglesIn);
-    }*/
-/*
-  it = SensorsIn.find("accelerometer_0");
-  if (it!=SensorsIn.end())
-    {
-      const vector<double>& accelerometer = 
-        SensorsIn ["accelerometer_0"].getValues ();
-      for (std::size_t i=0; i<3; ++i) 
-        accelerometer_ (i) = accelerometer [i];
-      accelerometerSOUT_.setConstant (accelerometer_);
-    }
-
-  it = SensorsIn.find("gyrometer_0");
-  if (it!=SensorsIn.end())
-    {
-      const vector<double>& gyrometer = SensorsIn ["gyrometer_0"].getValues ();
-      for (std::size_t i=0; i<3; ++i) 
-        gyrometer_ (i) = gyrometer [i];
-      gyrometerSOUT_.setConstant (gyrometer_);
-    }
-*/
 
   setSensorsIMU(SensorsIn,t);
   setSensorsEncoders(SensorsIn,t);
@@ -268,11 +215,7 @@ void SoTYoyoman01Device::getControl(map<string,dgsot::ControlValues> &controlOut
   anglesOut.resize(state_.size());
 
   // Integrate control
-/*  increment(timestep_);
 
-  sotDEBUG (25) << "state = " << state_ << std::endl;
-  sotDEBUG (25) << "diff  = " << state_ - previousState_ << std::endl;
-  previousState_ = state_;*/
   
   increment(timestep_);
   sotDEBUG (25) << "state = " << state_ << std::endl;
@@ -305,11 +248,10 @@ void SoTYoyoman01Device::getControl(map<string,dgsot::ControlValues> &controlOut
   zmpGlobal(3) = 1.;
   dgsot::MatrixHomogeneous inversePose;
   
-  //freeFlyerPose().inverse(inversePose);
-  //ml::Vector localZmp = inversePose * zmpGlobal;
+
   
   inversePose = freeFlyerPose().inverse(Eigen::Affine);
-  dg::Vector localZmp(4); localZmp = inversePose.matrix() * zmpGlobal; //remplace les deux lignes au dessus
+  dg::Vector localZmp(4); localZmp = inversePose.matrix() * zmpGlobal;
   
   vector<double> ZMPRef(3);
   for(unsigned int i=0;i<3;++i)
@@ -340,7 +282,7 @@ void SoTYoyoman01Device::getControl(map<string,dgsot::ControlValues> &controlOut
 
 
   controlOut["baseff"].setValues(baseff_);
-  ODEBUG5FULL("end"); //ce truc a ete rajoute 
+  ODEBUG5FULL("end"); 
   sotDEBUGOUT(25) ;
 }
 
@@ -374,12 +316,4 @@ const char * DebugTrace::DEBUG_FILENAME_DEFAULT = "/tmp/sot-core-traces.txt";
 
 
 
-/*
-void SoTRomeoDevice::updateRobotState(const vector<double> &anglesIn)
-{
-  sotDEBUGIN(25) ;
-  for (unsigned i = 0; i < anglesIn.size(); ++i)
-    mlRobotState (i + 6) = anglesIn[i];
-  robotState_.setConstant(mlRobotState);
-  sotDEBUGOUT(25) ;
-}*/
+

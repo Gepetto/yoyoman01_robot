@@ -1,12 +1,12 @@
 
 /*
- * Copyright 2016,
+ * Copyright 2018,
  *
- * Olivier Stasse
+ * Nicolas Testard
  *
  * LAAS, CNRS
  *
- * This file is part of TalosController.
+ * This file is part of Yoyoman01Controller.
  */
 
 #ifndef _SOT_YoyomanController_H_

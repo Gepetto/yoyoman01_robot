@@ -1,13 +1,13 @@
 /* 
  * Copyright 2016,
  *
- * Rohan Budhiraja
- * Olivier Stasse
+ * Nicolas Testard
+ * 
  *
  * LAAS, CNRS
  *
- * This file is part of TALOSController.
- * TALOSController is a free software, 
+ * This file is part of Yoyoman01Controller.
+ * Yoyoman01Controller is a free software, 
  *
  */
 

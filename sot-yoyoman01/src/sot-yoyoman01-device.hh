@@ -1,7 +1,7 @@
 /*
- * Copyright 2011,
+ * Copyright 2018,
  *
- * Olivier Stasse
+ * Nicolas Testard
  *
  * LAAS, CNRS
  *
@@ -62,14 +62,12 @@ protected:
   // Update output port with the control computed from the
   // dynamic graph.
   
-  //void updateRobotState(const std::vector<double> &anglesIn);
 
   /// \brief Current integration step.
   double timestep_;
   
   /// \brief Previous robot configuration.
   
-  //maal::boost::Vector previousState_;
   dg::Vector previousState_;
   
   /// \brief Robot state provided by OpenHRP.
@@ -79,11 +77,9 @@ protected:
   /// does *not* match the state control input signal.
   ///
   
-  //dynamicgraph::Signal<ml::Vector, int> robotState_;
 
   /// Intermediate variables to avoid allocation during control
-  /*ml::Vector mlRobotState;
-  std::vector<double> baseff_;*/
+
 
   
   /// Intermediate variables to avoid allocation during control
