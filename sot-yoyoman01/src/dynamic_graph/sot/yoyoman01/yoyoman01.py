@@ -23,14 +23,14 @@ class Yoyoman01(AbstractHumanoidRobot):
     This class defines a Talos robot
     """
 
-    forceSensorInLeftAnkle =  ((1.,0.,0.,0.),
-                               (0.,1.,0.,0.),
-                               (0.,0.,1.,-0.107),
-                               (0.,0.,0.,1.))
-    forceSensorInRightAnkle = ((1.,0.,0.,0.),
-                               (0.,1.,0.,0.),
-                               (0.,0.,1.,-0.107),
-                               (0.,0.,0.,1.))
+#    forceSensorInLeftAnkle =  ((1.,0.,0.,0.),
+#                               (0.,1.,0.,0.),
+#                               (0.,0.,1.,-0.107),
+#                               (0.,0.,0.,1.))
+#    forceSensorInRightAnkle = ((1.,0.,0.,0.),
+#                               (0.,1.,0.,0.),
+#                               (0.,0.,1.,-0.107),
+#                               (0.,0.,0.,1.))
     """
     TODO: Confirm the position and existence of these sensors
     accelerometerPosition = np.matrix ((
@@ -95,12 +95,12 @@ class Yoyoman01(AbstractHumanoidRobot):
         self.device.set(self.halfSitting)
         plug(self.device.state, self.dynamic.position)
 
-        self.AdditionalFrames.append(
-            ("leftFootForceSensor",
-             self.forceSensorInLeftAnkle, self.OperationalPointsMap["left-ankle"]))
-        self.AdditionalFrames.append(
-            ("rightFootForceSensor",
-             self.forceSensorInRightAnkle, self.OperationalPointsMap["right-ankle"]))
+#        self.AdditionalFrames.append(
+#            ("leftFootForceSensor",
+#             self.forceSensorInLeftAnkle, self.OperationalPointsMap["left-ankle"]))
+#        self.AdditionalFrames.append(
+#            ("rightFootForceSensor",
+#             self.forceSensorInRightAnkle, self.OperationalPointsMap["right-ankle"]))
         
         self.dimension = self.dynamic.getDimension()
         self.plugVelocityFromDevice = True

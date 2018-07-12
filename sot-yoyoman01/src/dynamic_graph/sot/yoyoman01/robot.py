@@ -20,18 +20,11 @@ import numpy as np
 
 class Robot (Yoyoman01):
     """
-    This class instantiates LAAS TALOS Robot
+    This class instantiates LAAS Yoyoman01 Robot
     """
 
 
-    halfSitting = (0.0, 0.0,  1.018213,  0.00  ,  0.0, 0.0,                         #Free flyer
-                   0.0,  0.0, -0.411354,  0.859395, -0.448041, -0.001708, #Left Leg
-                   0.0,  0.0, -0.411354,  0.859395, -0.448041, -0.001708, #Right Leg
-                   0.0 ,  0.006761,                                                 #Chest
-                   0.25847 ,  0.173046, -0.0002, -0.525366, 0.0, -0.0,  0.1, -0.005,        #Left Arm
-                  -0.25847 , -0.173046, 0.0002  , -0.525366, 0.0,  0.0,  0.1,-0.005,      #Right Arm
-                   0.,  0.                                                          #Head
-               )
+    halfSitting = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
     def __init__(self, name,
                  device = None,

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2011, Florent Lamiraux, Thomas Moulard, JRL, CNRS/AIST
+# Copyright 2018, Nicolas Testard, CNRS, ENS Rennes
 #
 # This file is part of dynamic-graph.
 # dynamic-graph is free software: you can redistribute it and/or
@@ -13,7 +13,7 @@
 # General Lesser Public License for more details.  You should have
 # received a copy of the GNU Lesser General Public License along with
 # dynamic-graph. If not, see <http://www.gnu.org/licenses/>.
-print("Prologue Pyrene TALOS Robot")
+print("Prologue: the best of the best of the best YOYOMAN01 made by the best mecatronician engineer FCAM1 -with the help of xelofox-")
 
 from dynamic_graph.entity import PyEntityFactoryClass
 from dynamic_graph.sot.yoyoman01.robot import Robot
