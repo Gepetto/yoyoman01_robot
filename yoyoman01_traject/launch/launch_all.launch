@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<launch>
- <include file="$(find yoyoman01_traject)/launch/yoyoman01_gazebo.launch"/>
- <include file="$(find yoyoman01_traject)/launch/yoyoman01_control2.launch"/>
- <include file="$(find yoyoman01_traject)/launch/play_motion.launch"/>
-  <!--node name="home"  pkg="yoyoman01_traject" type="home.py" output="screen"/-->  
-
-</launch>
