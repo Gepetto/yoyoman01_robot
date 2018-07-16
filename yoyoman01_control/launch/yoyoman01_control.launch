@@ -1,11 +1,14 @@
 <launch>
+  <!-- necessary to load without gazebo  -->
+	<param name="robot_description"
+	command="$(find xacro)/xacro --inorder '$(find yoyoman01_description)/urdf/yoyoman01.xacro'" />
 
   <!-- Load joint controller configurations from YAML file to parameter server -->
   <rosparam file="$(find yoyoman01_control)/config/yoyoman01_control.yaml" command="load"/>
 
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-	output="screen" ns="/yoyoman01" args="joint_state_controller
+	output="screen"  args="joint_state_controller
 					  Head_position_controller
 					  Neck_position_controller
 					  Rarm_position_controller
@@ -17,7 +20,6 @@
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
 	respawn="false" output="screen">
-    <remap from="/joint_states" to="/yoyoman01/joint_states" />
   </node>
 
 </launch>
