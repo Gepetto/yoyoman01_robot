@@ -3,9 +3,6 @@
 
 #include <stdint.h>
 
-//Comment to desactive
-#define ACTIV_CODEURS // Direct read of the 4 encremental endoders using STM32 timers
-
 ////dans .c: #include "variables.h"
 //------------------------IMU---------------------
 //Adresses registres
@@ -35,11 +32,8 @@
 #define BAUD_XM 1000000
 #define BAUD_ODRIVE 115200
 //------------------SPI --------------------
-#ifdef ACTIV_CODEURS
 #define SIZE_BUFFER 44
-#else
-#define SIZE_BUFFER 30
-#endif
+#define SESAME 36055
 //------------------Definition des Pins --------------------
 #define PIN_DATA_CTRL_AX PG2
 #define PIN_DATA_CTRL_XM PG3
@@ -51,6 +45,13 @@
 #define XM_1 1  //RIGHT
 #define XM_2 2  //LEFT
 #define ALL 254 // Broadcast ID
+//------------------Motors limits--------------------
+#define LIM_INF_AX 470  //15°
+#define LIM_SUP_AX 554  //15°
+#define LIM_INF_XM 1645 //35°
+#define LIM_SUP_XM 2451 //35°
+#define LIM_INF_OD -4000
+#define LIM_SUP_OD 4000
 //------------------Definition des Variables--------------------
 
 //IMU
@@ -79,17 +80,19 @@ uint8_t DIAGNOSTIC_STATUS;
 
 struct TrameWrite
 { // Variables "write" to send over SPI from the master
+  //Outils
+  uint16_t wspi_test;
+  uint16_t w_flag;
+
   //Odrive
-  uint16_t wOd0_pos;
-  uint16_t wOd1_pos;
+  int16_t wOd0_pos;
+  int16_t wOd1_pos;
   //AX
   uint16_t wAx1_pos;
   uint16_t wAx2_pos;
   //XM
   uint16_t wXm1_pos;
   uint16_t wXm2_pos;
-
-  uint16_t wspi_test;
 
   //Inutilisé
   uint16_t a;
@@ -102,8 +105,6 @@ struct TrameWrite
   uint16_t h;
   uint16_t i;
   uint16_t k;
-  uint16_t l;
-
   int16_t m;
   int16_t n;
   int16_t o;
@@ -112,6 +113,9 @@ struct TrameWrite
 
 struct TrameRead
 { // Variables "read" to send over SPI from the slave
+  //Outils
+  uint16_t rspi_test;
+
   //Odrive
   uint16_t rOd0_pos; //read Odrive Right
   uint16_t rOd1_pos;
@@ -128,26 +132,28 @@ struct TrameRead
   int16_t acc[3];
   int16_t mag[3];
 
-  uint16_t rspi_test;
-
-  //  int16_t rXrate;
-  //  int16_t rYrate;
-  //  int16_t rZrate;
-  //  int16_t rXacc;
-  //  int16_t rYacc;
-  //  int16_t rZacc;
-  //  int16_t rXmag;
-  //  int16_t rYmag;
-  //  int16_t rZmag;
   //Codeurs
-  int16_t rCodRMot;
-  int16_t rCodRHip;
-  int16_t rCodLMot;
-  int16_t rCodLHip;
+  int16_t rCodHip0;
+  int16_t rCodHip1;
+  int16_t rCodMot0;
+  int16_t rCodMot1;
 
-//attention la deniere variable peut ne pas être stable
-
+  //attention la deniere variable peut ne pas être stable
 
 } rbuffer;
 
+
+//------------------Flags--------------------
+#define NO_FLAG 0
+#define FLAG_ROD 1
+#define FLAG_WOD 2
+#define FLAG_RAX 4
+#define FLAG_WAX 8
+#define FLAG_RXM 16      // read data
+#define FLAG_WXM 32      //write data
+#define FLAG_TORQUEXM 64 // enable torque
+#define FLAG_IMU 128
+#define FLAG_CODEURS 256
+
 #endif
+
