@@ -33,6 +33,7 @@
 #define BAUD_ODRIVE 115200
 //------------------SPI --------------------
 #define SIZE_BUFFER 44
+#define SESAME 36055
 //------------------Definition des Pins --------------------
 #define PIN_DATA_CTRL_AX PG2
 #define PIN_DATA_CTRL_XM PG3
@@ -44,6 +45,13 @@
 #define XM_1 1  //RIGHT
 #define XM_2 2  //LEFT
 #define ALL 254 // Broadcast ID
+//------------------Motors limits--------------------
+#define LIM_INF_AX 470  //15°
+#define LIM_SUP_AX 554  //15°
+#define LIM_INF_XM 1645 //35°
+#define LIM_SUP_XM 2451 //35°
+#define LIM_INF_OD -4000
+#define LIM_SUP_OD 4000
 //------------------Definition des Variables--------------------
 
 //IMU
@@ -136,13 +144,14 @@ struct TrameRead
 
 //------------------Flags--------------------
 #define NO_FLAG 0
-#define FLAG_OD 1
-#define FLAG_RAX 2
-#define FLAG_WAX 4
-#define FLAG_RXM 8       // read data
-#define FLAG_WXM 16      //write data
-#define FLAG_TORQUEXM 32 // enable torque
-#define FLAG_IMU 64
-#define FLAG_CODEURS 128
+#define FLAG_ROD 1
+#define FLAG_WOD 2
+#define FLAG_RAX 4
+#define FLAG_WAX 8
+#define FLAG_RXM 16      // read data
+#define FLAG_WXM 32      //write data
+#define FLAG_TORQUEXM 64 // enable torque
+#define FLAG_IMU 128
+#define FLAG_CODEURS 256
 
 #endif
