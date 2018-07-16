@@ -4,7 +4,7 @@
    publish_rate: 50
 
  full_body_controller:
-   type: "effort_controllers/JointTrajectoryController"
+   type: "position_controllers/JointTrajectoryController"
    joints:
      - Rarm
      - Larm
