@@ -142,6 +142,7 @@ struct TrameRead
 
 } rbuffer;
 
+
 //------------------Flags--------------------
 #define NO_FLAG 0
 #define FLAG_ROD 1
@@ -155,3 +156,4 @@ struct TrameRead
 #define FLAG_CODEURS 256
 
 #endif
+

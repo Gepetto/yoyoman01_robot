@@ -1,0 +1,28 @@
+<!-- -*-xml-*-
+     Handle ROS simulation of the SoT.
+  -->
+<launch>
+  <!-- Which robot are we controlling ? -->
+  <arg name="robot" default="yoyoman01" />
+  <arg name="libsot" default="libsot-yoyoman01-controller.so" />   
+
+  <arg name="sot-launch-prefix" default="" />
+
+  <include file="$(find sot_yoyoman01_bringup)/launch/geometric_simu_context.launch" >
+    <arg name="robot" value="$(arg robot)" />       
+    <arg name="libsot" value="$(arg libsot)" />
+  </include>
+
+  <!-- Load Stack of Tasks. -->
+  <node machine="geometric_simu_machine" 
+        name="node_stack_of_tasks" 
+	pkg="dynamic_graph_bridge"
+	type="geometric_simu"
+        args=" --input-file $(arg libsot)"
+        launch-prefix="$(arg sot-launch-prefix)"
+	respawn="true">
+    <param name="/sot/dg/geometric_simu" value="" />
+  </node>
+
+
+</launch>

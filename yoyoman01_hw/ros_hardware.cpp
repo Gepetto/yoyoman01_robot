@@ -26,13 +26,11 @@
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/robot_hw.h>
 
-//**************************THREADS****************************
-#include <pthread.h>
-#define NUM_THREADS 2
-//**************************SPI****************************
+//*****************SPI**********************
 //~ #include "/home/fcaminad/Documents/GIT/catkin_ws/src/yoyoman01_robot/yoyoman01_hw/variables.h"
 #include "variables.h"
 #include "mraa/spi.h"
+int SpiFunction();
 
 #define TAU 6.2831
 
@@ -61,7 +59,7 @@ void *ROSloop(void *argument);
 pthread_mutex_t mutx = PTHREAD_MUTEX_INITIALIZER; //mutex initialisation
 //******************************************************
 
-///Attention Ã  bien inclure chaque type de message !
+///Attention à bien inclure chaque type de message !
 #include <std_msgs/Float64.h>
 
 //void quitRequested(int sig) {
@@ -74,6 +72,7 @@ class Yoyoman01Class : public hardware_interface::RobotHW
 {
   public:
     int ReadWrite();
+
     int SpiInit();
     void SPI_check_connection();
     int UpdateImu();
@@ -165,13 +164,53 @@ int Yoyoman01Class::ReadWrite()
     mraa_spi_transfer_buf(spi, (uint8_t *)ptr_wbuffer, (uint8_t *)ptr_rbuffer, SIZE_BUFFER); //TX,RX,size
 }
 
+int Yoyoman01Class::UpdateImu()
+{
+    /* Mise Ã  l'echelle DATA IMU */
+    ptr_rate->rXrate_scaled = (float)rbuffer.rate[0] / FACTOR_RATE;
+    ptr_rate->rYrate_scaled = (float)rbuffer.rate[1] / FACTOR_RATE;
+    ptr_rate->rZrate_scaled = (float)rbuffer.rate[2] / FACTOR_RATE;
+    ptr_acc->rXacc_scaled = (float)rbuffer.acc[0] / FACTOR_ACC;
+    ptr_acc->rYacc_scaled = (float)rbuffer.acc[1] / FACTOR_ACC;
+    ptr_acc->rZacc_scaled = (float)rbuffer.acc[2] / FACTOR_ACC;
+    ptr_mag->rXmag_scaled = (float)rbuffer.mag[0] / FACTOR_MAG;
+    ptr_mag->rYmag_scaled = (float)rbuffer.mag[1] / FACTOR_MAG;
+    ptr_mag->rZmag_scaled = (float)rbuffer.mag[2] / FACTOR_MAG;
+
+    hardware_interface::ImuSensorHandle::Data ImuData;
+    ImuData.angular_velocity = (double *)ptr_rate;
+    ImuData.linear_acceleration = (double *)ptr_acc;
+}
+
+/* get cmd from ROS */
+int Yoyoman01Class::UpdateCmd()
+{
+    ptr_wbuffer->wAx1_pos = cmd[1]; //head
+    ptr_wbuffer->wAx2_pos = cmd[2]; //neck
+    ptr_wbuffer->wXm1_pos = cmd[3];
+    ptr_wbuffer->wXm2_pos = cmd[4];
+    ptr_wbuffer->wOd0_pos = cmd[5];
+    ptr_wbuffer->wOd1_pos = cmd[6];
+}
+/* get position from STM32 */
+int Yoyoman01Class::UpdateSensor()
+{
+    pos[1] = ptr_rbuffer->rAx1_pos;
+    pos[2] = ptr_rbuffer->rAx2_pos;
+    pos[3] = ptr_rbuffer->rXm1_pos;
+    pos[4] = ptr_rbuffer->rXm2_pos;
+    pos[5] = ptr_rbuffer->rOd0_pos;
+    pos[6] = ptr_rbuffer->rOd1_pos;
+}
+
 int Yoyoman01Class::SpiInit()
 {
     //////////SPI INITIALISATION///////////////////////////////////////////
-    /* initialize mraa for the platform (not needed most of the times) */
+ /* initialize mraa for the platform (not needed most of the times) */
     mraa_init();
 
     mraa_result_t status = MRAA_SUCCESS;
+
 
     /* initialize SPI bus */
     spi = mraa_spi_init(SPI_BUS);
@@ -194,12 +233,14 @@ int Yoyoman01Class::SpiInit()
     {
         goto err_exit;
     }
+
     /* set big endian mode */
     status = mraa_spi_lsbmode(spi, MSB_FIRST);
     if (status != MRAA_SUCCESS)
     {
         goto err_exit;
     }
+
     /* MAX7219/21 chip needs the data in word size */
     status = mraa_spi_bit_per_word(spi, 8);
     if (status != MRAA_SUCCESS)
@@ -207,6 +248,7 @@ int Yoyoman01Class::SpiInit()
         fprintf(stdout, "Failed to set SPI Device to 8Bit mode\n");
         goto err_exit;
     }
+
     else
     {
         return 0;
@@ -219,6 +261,7 @@ err_exit:
     /* deinitialize mraa for the platform (not needed most of the times) */
     mraa_deinit();
     return EXIT_FAILURE;
+
 }
 
 void Yoyoman01Class::SPI_check_connection()
@@ -245,6 +288,7 @@ void Yoyoman01Class::SPI_check_connection()
         ptr_rbuffer->rspi_test = 0; //reset reception
     }
 }
+
 
 int Yoyoman01Class::UpdateImu()
 {

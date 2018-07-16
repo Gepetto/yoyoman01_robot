@@ -1,0 +1,13 @@
+controller_list:
+  - name: full_body_controller
+    action_ns: home
+    type: FollowJointTrajectory
+    joints:
+      - Rarm
+      - Larm
+      - RHip
+      - LHip
+      - Head
+      - Neck
+
+
