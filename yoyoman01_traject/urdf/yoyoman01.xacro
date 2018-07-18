@@ -58,7 +58,7 @@
     <child link="NeckLink"/>
     <origin rpy="0 0 0" xyz="0 0 0.675"/>
     <axis xyz="0 1 0"/>
-    <limit effort="1.5" lower="-0.5" upper="0.5" velocity="6.175333333"/>
+    <limit effort="1.5" lower="-2" upper="2" velocity="6.175333333"/>
   </joint>
   <link name="NeckLink">
     <inertial>
@@ -85,7 +85,7 @@
     <child link="HeadLink"/>
     <origin rpy="0 0 0" xyz="0 0 0.064502"/>
     <axis xyz="0 1 0"/>
-    <limit effort="1.5" lower="-0.5" upper="0.5" velocity="6.175333333"/>
+    <limit effort="1.5" lower="-2" upper="2" velocity="6.175333333"/>
   </joint>
   <link name="HeadLink">
     <inertial>

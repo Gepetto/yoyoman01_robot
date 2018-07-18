@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
+<param name="robot_description"
+command="$(find xacro)/xacro --inorder '$(find yoyoman01_traject)/urdf/yoyoman01.xacro'" />
 
   <!-- Load joint controller configurations from YAML file to parameter server -->
   

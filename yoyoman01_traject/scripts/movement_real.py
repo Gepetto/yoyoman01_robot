@@ -7,24 +7,47 @@ from std_msgs.msg import String
 from std_srvs.srv import Empty
 import os
 
+
+
+
+
+
 if __name__ == "__main__":
-  os.system('rosservice call gazebo/unpause_physics')
-  rospy.init_node("home")
+
+  rospy.sleep(6)
+
+  rospy.init_node("movement_node", anonymous=True)
   rospy.loginfo("Waiting for play_motion...")
+
+
   client = actionlib.SimpleActionClient("/play_motion", PlayMotionAction)
+  rospy.loginfo("Waiting for server")
+
+  # Waits until the action server has started up and started
+  # listening for goals.
   client.wait_for_server()
   rospy.loginfo("...connected.")
 
+
   rospy.wait_for_message("joint_states", JointState)
-  ##pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
-  rospy.sleep(0.1)
-  #unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
-  rospy.loginfo("home...")
+  rospy.loginfo("joint_states get")
+  rospy.sleep(1)
+
+
+  
+  #launch the movement
+  rospy.loginfo("movement launch")
   goal = PlayMotionGoal()
   goal.motion_name = 'home'
   goal.skip_planning = True
 
+ 
+
+  # Sends the goal to the action server.
   client.send_goal(goal)
-  #pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
-  client.wait_for_result(rospy.Duration(10.0))
-  rospy.loginfo("Move done.")
+
+
+  
+
+
+  rospy.loginfo("movement done.")
