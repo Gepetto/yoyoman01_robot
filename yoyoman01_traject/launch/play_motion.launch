@@ -5,7 +5,7 @@
 	      command="$(find xacro)/xacro --inorder $(find yoyoman01_traject)/config/yoyoman01.srdf.xacro"/>
   <arg name="robot_sufix"  default=""/>
   <!-- execute pre-recorded motions -->
-  <rosparam file="$(find yoyoman01_traject)/config/yoyoman01_motions3$(arg robot_sufix).yaml" command="load" />
+  <rosparam file="$(find yoyoman01_traject)/config/yoyoman01_motions4$(arg robot_sufix).yaml" command="load" />
   <node pkg="play_motion"  type="play_motion" name="play_motion" >
     <rosparam file="$(find yoyoman01_traject)/config/approach_planner.yaml" command="load" />
   </node>
