@@ -51,3 +51,6 @@ if __name__ == "__main__":
 
 
   rospy.loginfo("movement done.")
+
+while not rospy.is_shutdown():
+  i=0
