@@ -1,0 +1,9 @@
+controller_list:
+  - name: fake_full_body_controller
+    joints:
+      - LHip
+      - Larm
+      - Neck
+      - Head
+      - RHip
+      - Rarm
