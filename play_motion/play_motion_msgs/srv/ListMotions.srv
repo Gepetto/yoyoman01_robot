@@ -1,4 +1,0 @@
-# Returns the list of currently loaded motions that can be played by play_motion
-
----
-MotionInfo[] motions
