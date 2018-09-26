@@ -4903,7 +4903,7 @@ print("-----------------------------------------")
 #ECHANTILLONAGE
 
 #pour le yoyoman01_motions.yaml IMPORTANT
-print("\n \n yoyoman01_motions.yaml IMPORTANT \n")
+print("\n \n Copy >>>>\n")
 for k in range (0,int(LONG_ECHTILLON_1)):
 	print ("       - positions: ["+str(M[TPS_ECHTILLON1 *k][11])+", "+str(M[TPS_ECHTILLON1 *k][7])+", "+str(M[TPS_ECHTILLON1 *k][10])+", "+str(M[TPS_ECHTILLON1 *k][6])+", "+str(M[TPS_ECHTILLON1 *k][9])+", "+str(M[TPS_ECHTILLON1 *k][8])+"]")
 	print ("         time_from_start: "+str(T[TPS_ECHTILLON1 *k]))
@@ -4911,7 +4911,7 @@ for k in range (0,int(LONG_ECHTILLON_2)):
 	print ("       - positions: ["+str(M[longueur1+TPS_ECHTILLON2 *k][11])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][7])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][10])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][6])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][9])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][8])+"]")
 	print ("         time_from_start: "+str(T[longueur1+TPS_ECHTILLON2 *k]))
 
-print("\n end yoyoman01_motions.yaml IMPORTANT \n")
+print("\n <<<< end Copy \n")
 
 #pour le yoyoman01_gazebo.launch ligne 31 IMPORTANT
 print("\n \n yoyoman01_gazebo.launch ligne 31 IMPORTANT")
