@@ -4905,11 +4905,14 @@ longueur1= 0
 #pour le yoyoman01_motions.yaml IMPORTANT
 print("\n \n Copy >>>>\n")
 #for k in range (0,int(LONG_ECHTILLON_1)):
+for k in range (0,int(longueur2/3)-14):
 	#print ("       - positions: ["+str(M[TPS_ECHTILLON1 *k][11])+", "+str(M[TPS_ECHTILLON1 *k][7])+", "+str(M[TPS_ECHTILLON1 *k][10])+", "+str(M[TPS_ECHTILLON1 *k][6])+", "+str(M[TPS_ECHTILLON1 *k][9])+", "+str(M[TPS_ECHTILLON1 *k][8])+"]")
 	#print ("         time_from_start: "+str(T[TPS_ECHTILLON1 *k]))
-for k in range (0,int(LONG_ECHTILLON_2)):
-	print ("       - positions: ["+str(M[longueur1+TPS_ECHTILLON2 *k][11])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][7])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][10])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][6])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][9])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][8])+"]")
-	print ("         time_from_start: "+str(T[longueur1+TPS_ECHTILLON2 *k]))
+#for k in range (0,int(LONG_ECHTILLON_2)):
+	#print ("       - positions: ["+str(M[longueur1+TPS_ECHTILLON2 *k][11])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][7])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][10])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][6])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][9])+", "+str(M[longueur1+TPS_ECHTILLON2 *k][8])+"]")
+	#print ("         time_from_start: "+str(T[longueur1+TPS_ECHTILLON2 *k]))
+	print ("       - positions: ["+str(M[30*k+14][11])+", "+str(M[30*k+14][7])+", "+str(M[30*k+14][10])+", "+str(M[30*k+14][6])+", "+str(M[30*k+14][9])+", "+str(M[30*k+14][8])+"]")
+	print ("         time_from_start: "+str(T[30*k+14]))
 
 print("\n <<<< end Copy \n")
 
