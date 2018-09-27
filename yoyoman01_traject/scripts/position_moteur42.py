@@ -2451,23 +2451,23 @@ for k in range (0,10*longueur):
 #Mise en forme pour la générartion du fichier python
 #
 
-print("	play_motion:")
-print("		controllers: full_body_controller")
-print("		motions:")
-print("			home:")
-print("				joints: [Rarm, Larm, RHip, LHip, Head, Neck]")
-print("				points:")
+print(" play_motion:")
+print("   controllers: full_body_controller")
+print("   motions:")
+print("     home:")
+print("       joints: [Rarm, Larm, RHip, LHip, Head, Neck]")
+print("       points:")
 
 
 
 #pour le yoyoman01_motions.yaml IMPORTANT
 for k in range (0,int(longueur/3)-14):
 
-	print ("				- positions: ["+str(M[30*k+14][11])+", "+str(M[30*k+14][7])+", "+str(M[30*k+14][10])+", "+str(M[30*k+14][6])+", "+str(M[30*k+14][9])+", "+str(M[30*k+14][8])+"]")
-	print ("				time_from_start: "+str(T[30*k+14]))
+	print ("       - positions: ["+str(M[30*k+14][11])+", "+str(M[30*k+14][7])+", "+str(M[30*k+14][10])+", "+str(M[30*k+14][6])+", "+str(M[30*k+14][9])+", "+str(M[30*k+14][8])+"]")
+	print ("         time_from_start: "+str(T[30*k+14]))
 
 
-print("				meta:")
-print("					name: Home")
-print("					usage: demo")
-print("					description: 'Go home'")
+print("       meta:")
+print("         name: Home")
+print("         usage: demo")
+print("         description: 'Go home'")
