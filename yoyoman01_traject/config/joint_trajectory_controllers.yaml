@@ -1,7 +1,7 @@
 
  joint_state_controller:
    type: joint_state_controller/JointStateController
-   publish_rate: 100
+   publish_rate: 50
 
  full_body_controller:
    type: "position_controllers/JointTrajectoryController"
@@ -13,13 +13,13 @@
      - Head
      - Neck
 
-  # gains:
-   #  Rarm: {p: 150,  d: 1, i: 1, i_clamp: 1}
-   #  Larm: {p: 150,  d: 1, i: 1, i_clamp: 1}
-   #  RHip: {p: 150,  d: 1, i: 1, i_clamp: 1}
-   #  LHip: {p: 150,  d: 1, i: 1, i_clamp: 1}
-   #  Head: {p: 150,  d: 1, i: 1, i_clamp: 1}
-   #  Neck: {p: 150,  d: 1, i: 1, i_clamp: 1}
+   gains:
+     Rarm: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     Larm: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     RHip: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     LHip: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     Head: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     Neck: {p: 1,  d: 0, i: 0, i_clamp: 0}
 
    constraints:
      goal_time: &goal_time_constraint 0.6
@@ -37,6 +37,6 @@
      Neck:
        goal: *goal_pos_constraint
 
-   state_publish_rate:  100            # Override default
-   action_monitor_rate: 100            # Override default
+   state_publish_rate:  50            # Override default
+   action_monitor_rate: 50            # Override default
    stop_trajectory_duration: 0   

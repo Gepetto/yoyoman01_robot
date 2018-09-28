@@ -8,25 +8,25 @@
   Head_position_controller:
     type: position_controllers/JointPositionController
     joint: Head
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+    pid: {p: 1, i: 0, d: 0}
   Neck_position_controller:
     type: position_controllers/JointPositionController
     joint: Neck
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+    pid: {p: 1, i: 0, d: 0}
   Rarm_position_controller:
     type: position_controllers/JointPositionController
     joint: Rarm
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+    pid: {p: 1, i: 0, d: 0}
   Larm_position_controller:
     type: position_controllers/JointPositionController
     joint: Larm
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+    pid: {p: 1, i: 0, d: 0}
   RHip_position_controller:
     type: position_controllers/JointPositionController
     joint: RHip
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+    pid: {p: 1, i: 0, d: 0}
   LHip_position_controller:
     type: position_controllers/JointPositionController
     joint: LHip
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+    pid: {p: 1, i: 0, d: 0}
     
