@@ -10,7 +10,7 @@ T=[] #temps
 
 #Demarrage
 temps1=data_cycle1.t_v1[1]-data_cycle1.t_v1[0] #Pas de temps
-print("pas de temps1 demarrage="+str(temps1))
+#print("pas de temps1 demarrage="+str(temps1))
 
 longueur1=len(data_cycle1.t_v1)
 
@@ -26,7 +26,7 @@ T0=data_cycle1.t_v1[len(data_cycle1.t_v1)-1]
 
 #Cycle normal
 temps=data_cycle.t_v[1]-data_cycle.t_v[0]
-print("pas de temps normal="+str(temps))
+#print("pas de temps normal="+str(temps))
 
 longueur=len(data_cycle.t_v)
 
@@ -60,14 +60,18 @@ print("   motions:")
 print("     home:")
 print("       joints: [Rarm, Larm, RHip, LHip, Head, Neck]")
 print("       points:")
+print("\n")
 
 for k in range (0,int(longueur/3)):
 
-	print ("       - positions: ["+str(M[30*k][11])+", "+str(M[30*k][7])+", "+str(M[30*k][10])+", "+str(M[30*k][6])+", "+str(M[30*k][9])+", "+str(M[30*k][8])+"]")
-	print ("         time_from_start: "+str(T[30*k]))
+	#print ("       - positions: ["+str(M[30*k][11]) +", "+str(M[30*k][7])+", "+str(M[30*k][10])+", "+str(M[30*k][6])+", "+str(M[30*k][9])+", "+str(M[30*k][8])+"]")
+	#print ("         time_from_start: "+str(T[30*k]))
 
+	print("       - positions: [%.13f, %.13f, %.13f, %.13f, %.13f, %.13f]" % (M[30*k][11], M[30*k][7], M[30*k][10], M[30*k][6], M[30*k][9], M[30*k][8]))
+	print ("        time_frome_start: %.13f" % (T[30*k]))
 
+print("\n")
 print("       meta:")
 print("         name: Home")
 print("         usage: demo")
-print("         description: 'Go home'")
+print("         description: '42'")
