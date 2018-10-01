@@ -76,7 +76,7 @@ print("\n")
 # Decalage de +1 pour le cycle de demarrage afin d'exclure le temps 0.00000 source de bugs
 for k in range (0,int(LONG_ECHTILLON_1)):
 	print("       - positions: [%.16f, %.16f, %.16f, %.16f, %.16f, %.16f]" % (M[TPS_ECHTILLON1*k+1][11], M[TPS_ECHTILLON1*k+1][7], M[TPS_ECHTILLON1*k+1][10], M[TPS_ECHTILLON1*k+1][6], M[TPS_ECHTILLON1*k+1][9], M[TPS_ECHTILLON1*k+1][8]))
-	print("         time_from_start: %.16f" % (T[TPS_ECHTILLON1*k+1]))
+	print("         *time_from_start: %.16f" % (T[TPS_ECHTILLON1*k+1]))
 for k in range (0,int(LONG_ECHTILLON_2)):
 	print("       - positions: [%.16f, %.16f, %.16f, %.16f, %.16f, %.16f]" % (M[longueur1+TPS_ECHTILLON2*k][11], M[longueur1+TPS_ECHTILLON2*k][7], M[longueur1+TPS_ECHTILLON2*k][10], M[longueur1+TPS_ECHTILLON2*k][6], M[longueur1+TPS_ECHTILLON2*k][9], M[longueur1+TPS_ECHTILLON2*k][8]))
 	print("         time_from_start: %.16f" % (T[longueur1+TPS_ECHTILLON2*k]))
