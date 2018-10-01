@@ -67,8 +67,8 @@ for k in range (0,int(longueur/3)):
 	#print ("       - positions: ["+str(M[30*k][11]) +", "+str(M[30*k][7])+", "+str(M[30*k][10])+", "+str(M[30*k][6])+", "+str(M[30*k][9])+", "+str(M[30*k][8])+"]")
 	#print ("         time_from_start: "+str(T[30*k]))
 
-	print("       - positions: [%.13f, %.13f, %.13f, %.13f, %.13f, %.13f]" % (M[30*k][11], M[30*k][7], M[30*k][10], M[30*k][6], M[30*k][9], M[30*k][8]))
-	print("         time_from_start: %.13f" % (T[30*k]))
+	print("       - positions: [%.6f, %.6f, %.6f, %.6f, %.6f, %.6f]" % (M[30*k][11], M[30*k][7], M[30*k][10], M[30*k][6], M[30*k][9], M[30*k][8]))
+	print("         time_from_start: %.6f" % (T[30*k]))
 
 print("\n")
 print("       meta:")
