@@ -1,10 +1,10 @@
+
  play_motion:
    controllers: full_body_controller
    motions:
      home:
        joints: [Rarm, Larm, RHip, LHip, Head, Neck]
        points:
-
 
        - positions: [0.1969252544922, -0.0044516465089, -0.0890819266256, 0.1385064795512, 0.0440804140201, 0.0508571399049]
          time_from_start: 0.0000000000000
@@ -542,7 +542,15 @@
          time_from_start: 7.0353930937742
 
 
+
+
+
+
+
+
        meta:
          name: Home
          usage: demo
-         description: '42'
+         description: 'Go home'
+
+
