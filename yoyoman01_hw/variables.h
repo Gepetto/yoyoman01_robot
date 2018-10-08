@@ -32,7 +32,7 @@
 #define BAUD_XM 1000000
 #define BAUD_ODRIVE 115200
 //------------------SPI --------------------
-#define SIZE_BUFFER 44
+#define SIZE_BUFFER 50 //2x size of the struct
 #define SESAME 36055
 //------------------Definition des Pins --------------------
 #define PIN_DATA_CTRL_AX PG2
@@ -109,6 +109,9 @@ struct TrameWrite
   int16_t n;
   int16_t o;
   int16_t p;
+  int16_t q;
+  int16_t r;
+  int16_t s;
 } wbuffer;
 
 struct TrameRead
@@ -138,7 +141,12 @@ struct TrameRead
   int16_t rCodMot0;
   int16_t rCodMot1;
 
-  //attention la deniere variable peut ne pas être stable
+  //feed back 
+  int16_t wOd0_pos_fb;
+  int16_t wOd1_pos_fb;
+
+  int16_t looptime;
+
 
 } rbuffer;
 
