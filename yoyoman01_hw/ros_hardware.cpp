@@ -366,7 +366,7 @@ cmd5=cmd[5];
     cXm1_pos = (cmd[2] * (4095 / TAU) + ZERO_XM1);
     cXm2_pos = (cmd[3] * (4095 / TAU) + ZERO_XM2);
     cOd0_pos = -( OFFSET0 + cmd[4] * (8192 / TAU) * (48 / 10))*1; //wh*4.8=wm //Positif = sens horaire   
-    cOd1_pos = ( OFFSET1 + cmd[5] * (8192 / TAU) * (48 / 10))*1;//Positif = sens anti horaire  
+    cOd1_pos = ( OFFSET1 + cmd[5] * (8192 / TAU) * (48 / 10))*1;//
 
 //2nd filtrage
 // Les données reçues peuvent être correctes mais en dehors des limites acceptables par les actionneurs 
@@ -630,7 +630,7 @@ int main(int argc, char *argv[])
 
     /*---------------- Initialisation moteurs ------------------ */
     yoyoman01.InitMotorsXM();// if disabled think to remove FLAG_WXM
-    //yoyoman01.InitMotorsAX();// if disabled think to remove FLAG_WAX
+    yoyoman01.InitMotorsAX();// if disabled think to remove FLAG_WAX
     //yoyoman01.InitMotorsOD();
 
     posk0 =0;

@@ -13,6 +13,7 @@ import os
 
 
 if __name__ == "__main__":
+  rospy.loginfo("entering movement.py")
   pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
   unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
   rospy.sleep(6)
