@@ -10,7 +10,7 @@ if __name__ == "__main__":
   rospy.init_node('tester', anonymous=True)
   uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
   roslaunch.configure_logging(uuid)
-  launch = roslaunch.parent.ROSLaunchParent(uuid,["/home/ntestar/catkin_ws/src/yoyoman01_robot/yoyoman01_traject/launch/yoyoman01_control2.launch"])
+  launch = roslaunch.parent.ROSLaunchParent(uuid,["/home/fcaminad/Documents/GIT/catkin_ws/src/yoyoman01_robot/yoyoman01_traject/launch/yoyoman01_control2.launch"])
   launch.start()
   
   rospy.spin()
