@@ -21,7 +21,7 @@
         <link name="RKneeLink" />
         <link name="RFootLink" />
         <link name="RArmLink" />
-        <joint name="fixed" />
+        <!--joint name="fixed" /-->
         <joint name="LHip" />
         <joint name="LKnee" />
         <joint name="LFoot" />

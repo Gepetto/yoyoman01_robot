@@ -40,3 +40,14 @@
    state_publish_rate:  50            # Override default
    action_monitor_rate: 50            # Override default
    stop_trajectory_duration: 0   
+
+
+#Setting gazebo PID to call POSITION_PID instead of POSITION and fix gravity issue
+ gazebo_ros_control:   
+   pid_gains:
+     Rarm: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     Larm: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     RHip: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     LHip: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     Head: {p: 1,  d: 0, i: 0, i_clamp: 0}
+     Neck: {p: 1,  d: 0, i: 0, i_clamp: 0}
